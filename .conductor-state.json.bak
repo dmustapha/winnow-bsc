@@ -55,11 +55,14 @@
   "pipeline": {
     "phases": {
       "intel": {
-        "status": "running",
-        "dispatched_at": "2026-09-08T21:37:08Z"
+        "status": "complete",
+        "dispatched_at": "2026-09-08T21:37:08Z",
+        "completed_at": "2026-09-08T21:49:25Z",
+        "verdict": "pass"
       },
       "warroom": {
-        "status": "pending"
+        "status": "running",
+        "dispatched_at": "2026-09-08T21:49:43Z"
       },
       "forge": {
         "status": "pending"
@@ -117,5 +120,9 @@
   "gate_integrity": {
     "sha": "c3825a6f191015bad2fdc65cb6e18ba66fd64b394e7cd2e8e7aeafb1756648b1",
     "recorded_at": "2026-09-08T21:48:20Z"
+  },
+  "intelState": {
+    "status": "complete",
+    "sourceCount": 41
   }
 }
