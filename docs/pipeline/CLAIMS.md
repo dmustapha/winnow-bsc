@@ -2,13 +2,14 @@
 
 | Phase | Verdict | Reason | State status | Updated |
 |---|---|---|---|---|
-| intel | pass | — | complete | 2026-09-09T05:54:36Z |
-| warroom | pass | — | complete | 2026-09-09T05:54:36Z |
-| forge | pass | — | complete | 2026-09-09T05:54:36Z |
-| critique | pass | — | complete | 2026-09-09T05:54:36Z |
-| build | pass | — | complete | 2026-09-09T05:54:36Z |
-| debug | pass_with_blockers | 1 lens contract(s) MISSING (MISSING != SAME) | complete | 2026-09-09T05:54:36Z |
-| wire | pass_with_blockers | wire=WIRED-WITH-DEGRADATION | WIRED-WITH-DEGRADATION | 2026-09-09T05:54:36Z |
-| verify_milestone | pass_with_blockers | claims ledger empty | complete | 2026-09-09T05:54:36Z |
-| design_forge | pass | — | complete | 2026-09-09T05:54:36Z |
-| verify_preflight | fail | claims ledger applicable but empty | complete | 2026-09-09T05:54:36Z |
+| intel | pass | — | complete | 2026-09-09T06:12:03Z |
+| warroom | pass | — | complete | 2026-09-09T06:12:04Z |
+| forge | pass | — | complete | 2026-09-09T06:12:04Z |
+| critique | pass | — | complete | 2026-09-09T06:12:04Z |
+| build | pass | — | complete | 2026-09-09T06:12:04Z |
+| debug | pass_with_blockers | 1 lens contract(s) MISSING (MISSING != SAME) | complete | 2026-09-09T06:12:04Z |
+| wire | pass_with_blockers | wire=WIRED-WITH-DEGRADATION | WIRED-WITH-DEGRADATION | 2026-09-09T06:12:04Z |
+| verify_milestone | pass_with_blockers | claims ledger empty | complete | 2026-09-09T06:12:04Z |
+| design_forge | pass | — | complete | 2026-09-09T06:12:04Z |
+| stress_test | fail | stress falsification test row unbacked (no resolvable test file) | complete | 2026-09-09T06:12:04Z |
+| verify_preflight | fail | claims ledger applicable but empty | complete | 2026-09-09T06:12:04Z |

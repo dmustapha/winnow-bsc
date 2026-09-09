@@ -1,0 +1,11 @@
+# pipeline internals (local only)
+.*-state.json
+.conductor-*
+.crossmodel-*
+.watchdog-alerts.log
+intel-state.json
+warroom/.warroom-state.json
+.build-state.json
+.codebase-manifest.md
+.pipeline-progress.log
+.input-manifest.json
