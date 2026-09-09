@@ -1,0 +1,92 @@
+[
+ {
+  "id": "C1",
+  "claim": "Full BSC registry indexing live and growing",
+  "value": "38307 indexed / 1858 probed (run of 2026-09-09T06:5x)",
+  "evidence": "/api/stats live read + verify-claims.ts output; BUILD-REPORT.md",
+  "regenerate": "curl -s localhost:3000/api/stats",
+  "tier": "VERIFIED",
+  "limitation": "count grows continuously; target 310K not yet reached (honest counter)"
+ },
+ {
+  "id": "C2",
+  "claim": "Every grade joins a real probe transcript (0 orphans)",
+  "value": "orphanGrades=0",
+  "evidence": "scripts/verify-claims.ts exit 0",
+  "regenerate": "npx tsx scripts/verify-claims.ts",
+  "tier": "VERIFIED",
+  "limitation": ""
+ },
+ {
+  "id": "C3",
+  "claim": "No negative findings onchain",
+  "value": "negativeAttestations=0",
+  "evidence": "scripts/verify-claims.ts exit 0 + attestor value>=0 guard",
+  "regenerate": "npx tsx scripts/verify-claims.ts",
+  "tier": "VERIFIED",
+  "limitation": ""
+ },
+ {
+  "id": "C4",
+  "claim": "Liveness attestation landed onchain from measured probe",
+  "value": "0xd09508a9d8efb27b22000e645d7977ad54831f4614647f5ad3df6518f6e22280",
+  "evidence": "testnet RPC receipt status 0x1 block 129965336 to ReputationRegistry 0x8004B663",
+  "regenerate": "eth_getTransactionReceipt via BSC testnet RPC",
+  "tier": "VERIFIED",
+  "limitation": "BSC testnet (chain 97), labeled as such in UI"
+ },
+ {
+  "id": "C5",
+  "claim": "Session caps enforced onchain; over-cap reverts; revoke kills key",
+  "value": "ExceededSpendLimit revert + isValidKey(session5)=true",
+  "evidence": "POST /api/overcap-demo reverted:true (verify run 06:47Z) + scripts/wire-keycheck.mts; 4 revoked sessions w/ grant+revoke txs in winnow-app/submission/proof.md",
+  "regenerate": "curl -X POST localhost:3000/api/overcap-demo -d '{\"sessionId\":5}'",
+  "tier": "VERIFIED",
+  "limitation": "Altana testnet Keystore"
+ },
+ {
+  "id": "C6",
+  "claim": "Live re-probe recomputes a grade in <=15s",
+  "value": "6.7s C/59 probeLogId 1774",
+  "evidence": "POST /api/reprobe 56/49637 during verify run",
+  "regenerate": "curl -X POST localhost:3000/api/reprobe -d '{\"chain\":56,\"id\":49637}'",
+  "tier": "VERIFIED",
+  "limitation": "per-agent 20s cooldown"
+ },
+ {
+  "id": "C7",
+  "claim": "TermiX Agent Advantage Report: 3 real both-ways tasks incl. trading",
+  "value": "3 tasks x 2 legs, wall-clocked",
+  "evidence": "winnow-app/submission/AGENT-ADVANTAGE-REPORT.md + advantage-runs/*.json",
+  "regenerate": "npx tsx scripts/advantage-agent-leg.mts",
+  "tier": "VERIFIED",
+  "limitation": "manual legs are operator-tooling lower bounds (stated in report)"
+ },
+ {
+  "id": "C8",
+  "claim": "Agent reasoning is real LLM output, never canned",
+  "value": "48 actions, 0 canned",
+  "evidence": "agent_actions.reasoning rows (sqlite) + skip-and-log code path strategies.ts:38",
+  "regenerate": "sqlite3 data/winnow.db 'SELECT reasoning FROM agent_actions'",
+  "tier": "VERIFIED",
+  "limitation": "API key credit-dry; CLI fallback slow \u2014 Fly deploy runs LLM-degraded until funded key (D-3/W-1)"
+ },
+ {
+  "id": "C9",
+  "claim": "Public deployment live Sep 9-23 on Fly.io",
+  "value": "pending",
+  "evidence": "deploy phase not yet run",
+  "regenerate": "",
+  "tier": "NOT_BUILT",
+  "limitation": "deploy phase owns; eligibility-critical"
+ },
+ {
+  "id": "C10",
+  "claim": "Mainnet attestations/sessions",
+  "value": "pending funding",
+  "evidence": "D-1 morning item; runbook scripts/mainnet-runbook per INVARIANTS D-12",
+  "regenerate": "",
+  "tier": "NOT_BUILT",
+  "limitation": "testnet-first by design D-6; submit-as-is branch documented at 10:30Z cut"
+ }
+]

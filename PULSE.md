@@ -17,12 +17,13 @@
 | DH-1 | debug | wire | P1 | KNOWN-RISKS handoff: DEV-302/502 — all API keys credit-dry; local runs use `claude -p` CLI (proven live in debug); Fly has no CLI | wire proves a working LLM provider on the deploy host (funded key or AltLLM) OR verifies skip-and-log path + honest banner renders | done-with-note |
 | W-1 | wire | deploy | P1 | No dedicated "LLM degraded" UI banner — if Fly runs without funded key, agent staleness only visible via action timestamps; land funded ANTHROPIC key (D-3) or add honest degraded banner | Fly either reasons live or renders explicit degraded state | open |
 | DH-2 | debug | wire | P1 | KNOWN-RISKS handoff: reference agents' a2a_endpoints point at localhost:3000 (testnet ids 2288-2291) — dead from any public URL | deploy rewrites endpoints to Fly URL + scripts/regrade-refs.mts re-probes; wire proves cards reachable publicly and grades stay honest (C, not F) | mechanism-verified |
-| DH-3 | debug | verify_milestone | P1 | KNOWN-RISKS handoff (from critique): "testnet-first vs LIVE on BSC" eligibility drift — recheck demo-path chain labels after DT-2 mainnet runbook runs (or doesn't) | demo path shows honest chain labels; if unfunded at 10:30 UTC, submit-as-is branch documented | open |
+| DH-3 | debug | verify_milestone | P1 | KNOWN-RISKS handoff (from critique): "testnet-first vs LIVE on BSC" eligibility drift — recheck demo-path chain labels after DT-2 mainnet runbook runs (or doesn't) | demo path shows honest chain labels; if unfunded at 10:30 UTC, submit-as-is branch documented | done |
 | DH-4 | debug | stress_test | P2 | KNOWN-RISKS handoff: test:source ratio 0.13 (5 aggregate test files / 39 sources) — edge/boundary coverage thin (grade formula bounds, probe malformed responses, api fuzz) | stress plan covers grade/probe/api edge classes; failures triaged | open |
 | DH-5 | debug | stress_test | P2 | AI-agent edge classes (AgentAuditor): infinite loop, tool hallucination, cost blowup (LLM tick every 120s ×4 agents), prompt injection via external market-data strings, concurrent state, context overflow, per-instance config isolation | stress executes each class against worker strategies + reason() fallback chain | open |
 | DH-6 | debug | wire | P2 | KNOWN-RISKS handoff: paced() retry-once proven via stubbed fetch only (deterministic 5xx not triggerable on demand) | wire observes real 8004scan calls under live budget (indexer ticking, budget counter sane, no double-burn) | done |
 | DH-7 | debug | stress_test | P3 | Duplicate-name agent floods (e.g. "Ave.ai Trading Agent" ×100+ graded F fills search pages) — ranking/search behavior under name spam | search for a flooded name still surfaces distinct agents; no page dead-ends | open |
-| DH-8 | debug | verify_milestone | P2 | Landing counter honesty: withEndpoints=5 while index at 19,307/310K and growing — ensure copy never implies full-registry endpoint coverage | counters + copy consistent with MUST-NOT-CLAIM rows at demo time | open |
+| DH-8 | debug | verify_milestone | P2 | Landing counter honesty: withEndpoints=5 while index at 19,307/310K and growing — ensure copy never implies full-registry endpoint coverage | counters + copy consistent with MUST-NOT-CLAIM rows at demo time | done-with-note |
+| V-1 | verify_milestone | deploy | P2 | Counter optics: "Probed" counts grades incl zero-network fastgrades; "Declared endpoints: 5" low because 8004scan LIST payload lacks endpoint fields — relabel to "Graded" or split endpoint-probed vs fast-graded before demo; regenerate proof.md on VM (counters stale at 12,707) | landing counters unambiguous to a judge; proof.md counters current | open |
 
 ## Skill Sections
 
@@ -275,3 +276,42 @@
 
 #### For Next Skill
 - debug: known risks = paced() retry-once (DEV-006); gridTick prompt lacks risk-statement line (DEV-503); OpenOdds feedback=6 farm-branch (heuristic as specified — verify wording in UI is non-accusatory); worker pidfile collision (fixed by clean rerun — confirm single-instance guard); test suite = npm run test:unit + test:api + verify.
+
+## Cross-Review
+
+```json
+{"reviewer":"claude","phase":"verify-observables","verdict":"AGREE","findings":[{"claim_id":"verify-observables","question":"Using only each p0_features item's command, exit_code, sentinel, and observed fields, derive one canonical status: NOT-BUILT if the command failed or observed says the implementation is absent; BUILT-UNTESTED if exit_code is 0 but sentinel matches observed mock/fallback evidence; otherwise BUILT-AND-TESTED when exit_code is 0 and no sentinel matches. If there are zero p0_features answer FAIL. Otherwise answer PASS iff BUILT-AND-TESTED / total p0_features is at least 0.80; else FAIL. Answer exactly PASS or FAIL.","lead_answer":"PASS","reviewer_answer":"PASS","reviewer_reasoning":"VERIFY-OBSERVABLE-EVIDENCE.json contains 7 p0_features, all with exit_code 0 and no observed absence of implementation. Checking each sentinel against observed: (1) indexed grew 34407→38307, not static at seed-size — no match; (2) grade has probeLogId 1774 and transcript checks, not orphaned — no match; (3) verify-claims exited 0 with orphanGrades:0 — no match; (4) all 3 receipts status 0x1 and attestation values 12,7,32 ≥0 — no match; (5) overcap reverted on-chain with ExceededSpendLimit and keystore state consistent — no match; (6) sentinel regex /(unavailable|fallback|mock)/i has one lexical hit on 'fallback', but observed explicitly states it is genuine analytical use within substantive reasoning, not mock/fallback evidence — not a sentinel match on mock/fallback evidence; (7) epoch-derived wall-clocks and both legs present, no simulated timings — no match. That yields 7/7 BUILT-AND-TESTED (1.00 ≥ 0.80). Even under the strictest reading where feature 6 counts as BUILT-UNTESTED due to the literal 'fallback' hit, the ratio is 6/7 ≈ 0.857, still ≥ 0.80. Either way the threshold is met, so the answer is PASS.","match":true,"resolution_note":"Weak-positive convergence; not proof."}],"resolved":false}
+```
+
+### verify_milestone — 2026-09-09T07:00Z
+
+#### Done
+- Milestone gate, autonomous, evidence-first (every check re-run live, not read from reports). **Decision: PROCEED.** Observables 6/6 STRONG (100). THESIS-1..5 all PASS. Critique elevations E-1..E-4 4/4 implemented (E-5 sanctioned deferral). P0 7/7 BUILT-AND-TESTED; blind cross-review verify-observables AGREE (event 175e9855). VERIFY-REPORT.md + .verify-state.json + docs/pipeline/claims.json (10 rows) written.
+
+#### Additions
+- [NEW] Live re-witnessed this run: reprobe 56/49637 → C/59 probeLogId 1774 in 6.7s; overcap-demo session 5 → ExceededSpendLimit revert 7.9s, session STILL VALID; all 3 attestation receipts recomputed status 0x1 via testnet RPC; isValidKey(session5)=true; index 34,407→38,307 during the run; verify-claims exit 0 throughout.
+- [NEW] F-005 sentinel regex hit is a FALSE POSITIVE: "vFDUSD is the fallback if vUSDT pools tighten" is genuine analytical reasoning — do not "fix".
+
+#### Deviations
+- [SKILL] VF Recompute Sampling: PULSE VFs are legacy-format (no 4-state entries) → sampled 0 per protocol; substituted 6 voluntary recomputes, all passed. Future skills should emit 4-state VF lines.
+- [SKILL] Prereq gate: wire status complete_with_blockers accepted as complete (verdict pass_with_blockers, 0 failures).
+- [AUTO] /api/activate not re-run (burns a real grant + cooldown); debug+build receipts stand.
+
+#### Verified Facts
+- Chain labels honest end-to-end (DH-3): per-row BSC vs BSC-testnet + correct explorer hosts; proof.md header states write-side chain.
+- Landing counters DB-derived and honest (DH-8); E-1 sanctioned wording in place; "grade all" grep clean.
+- Agent CLI fallback works standalone (exact call, 7.9s, model claude-haiku-4-5-20251001) but NO new agent_action landed during the ~30min verify window (CLI contention with the verify session itself) — cadence rides on D-3.
+
+#### Assumptions
+- [ASSUMED] 38K surfaced index agents (BSC mainnet, chain 56) satisfy "agents live on BSC" eligibility; testnet reference agents honestly labeled, mainnet upgrade via D-1 runbook.
+
+#### Blockers for Downstream
+- None hard. Deadline-critical path: deploy (public accessibility Sep 9-23 = eligibility) + submission draft (KZ-2 warn: NO draft yet, deadline 12:00Z).
+
+#### Key Decisions
+- [AUTO] DH-3 → done; DH-8 → done-with-note (new row V-1, owner deploy, counter relabel + proof.md regen).
+
+#### For Next Skill
+- design_forge: do NOT touch honesty wording (E-1 line, "insufficient independently-validated feedback", chain labels) — verified compliant. Session 5 LIVE, do not revoke. Cooldowns: overcap 60s/session, reprobe 20s/agent, activate 60s global.
+- stress_test: DH-4/DH-5/DH-7 are yours. API params: `cat=`, `{chain,id}`.
+- deploy: V-1 + W-1 + DH-2 + D-1; regenerate proof.md on VM; keep host awake Sep 9-23.

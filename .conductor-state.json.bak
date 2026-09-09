@@ -110,11 +110,14 @@
         "verdict": "pass_with_blockers"
       },
       "wire": {
-        "status": "running",
-        "dispatched_at": "2026-09-09T05:09:54Z"
+        "status": "complete_with_blockers",
+        "dispatched_at": "2026-09-09T05:09:54Z",
+        "completed_at": "2026-09-09T05:24:11Z",
+        "verdict": "pass_with_blockers"
       },
       "verify_milestone": {
-        "status": "pending"
+        "status": "running",
+        "dispatched_at": "2026-09-09T05:24:56Z"
       },
       "design_forge": {
         "status": "pending"
@@ -197,5 +200,11 @@
     "confidence": 90,
     "fixes": 10,
     "unresolved": 0
+  },
+  "wireState": {
+    "status": "WIRED-WITH-DEGRADATION",
+    "connectionsPassed": 9,
+    "connectionsTotal": 11,
+    "mockWarnings": 0
   }
 }

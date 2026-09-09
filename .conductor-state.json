@@ -116,7 +116,10 @@
         "verdict": "pass_with_blockers"
       },
       "verify_milestone": {
-        "status": "pending"
+        "status": "complete",
+        "dispatched_at": "2026-09-09T05:24:56Z",
+        "completed_at": "2026-09-09T05:43:58Z",
+        "verdict": "pass_with_blockers"
       },
       "design_forge": {
         "status": "pending"
@@ -205,5 +208,12 @@
     "connectionsPassed": 9,
     "connectionsTotal": 11,
     "mockWarnings": 0
+  },
+  "verifyMilestoneState": {
+    "status": "complete",
+    "decision": "PROCEED",
+    "killZonesTriggered": 0,
+    "observables": "6/6",
+    "thesis": "PASS"
   }
 }
