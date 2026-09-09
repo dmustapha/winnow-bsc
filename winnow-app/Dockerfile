@@ -17,4 +17,4 @@ COPY --from=build /app/scripts ./scripts
 COPY --from=build /app/node_modules/tsx ./node_modules/tsx
 COPY --from=build /app/seed ./seed
 EXPOSE 3000
-CMD ["sh", "-c", "mkdir -p /app/data && [ -f /app/data/winnow.db ] || cp /app/seed/winnow-seed.db /app/data/winnow.db; node server.js"]
+CMD ["sh", "-c", "export HOSTNAME=0.0.0.0; mkdir -p /app/data && [ -f /app/data/winnow.db ] || cp /app/seed/winnow-seed.db /app/data/winnow.db; node server.js"]
