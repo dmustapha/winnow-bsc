@@ -1,12 +1,12 @@
-# Build the Era — Submission Form Answers (paste-ready)
-Form: https://forms.gle/9g9XPNFwnYaHAz9L8 — submit before 12:00 UTC (1:00 PM WAT)
+# Build the Era: Submission Form Answers (paste-ready)
+Form: https://forms.gle/9g9XPNFwnYaHAz9L8, submit before 12:00 UTC (1:00 PM WAT)
 
 **Email:** damilolamustaphaa@gmail.com (tick "Record as the email to be included")
 **Full Name:** Damilola Mustapha
 **Email Address:** damilolamustaphaa@gmail.com
-**Telegram Handle:** (yours — fill in)
+**Telegram Handle:** (yours, fill in)
 **X Handle:** @capitanoo23
-**Discord:** (optional — yours)
+**Discord:** (optional, yours)
 **How did you hear:** BNB Chain announcement / X
 **Country + Timezone:** Nigeria, UTC+1 (WAT)
 **Solo or Team:** Solo
@@ -30,11 +30,11 @@ Session lifecycle proven onchain (grant / in-cap execute / over-cap revert / rev
 **Sub-prize tracks (tick):** PancakeSwap ✓, AltLayer ✓, TermiX ✓
 **GitHub Repo Link:** https://github.com/dmustapha/winnow-bsc
 **Prototype Stage:** Working MVP
-**BSC/EVM experience:** Yes — multiple shipped EVM projects (ERC-8004 deep experience)
+**BSC/EVM experience:** Yes, multiple shipped EVM projects (ERC-8004 deep experience)
 **Areas of comfort:** Solidity, AI frameworks, Onchain data, Frontend (all)
 **Mentorship:** No
 **Availability confirm:** Yes
 **Wallet address (BEP-20):** 0xc211C942946011859ca634F22400d80570ED12A5
 
-**Notes (paste this — carries the Altana entry):**
+**Notes (paste this, carries the Altana entry):**
 Also entering Best Built with Altana: agents transact through their own Altana session keys registered in the onchain Keystore. Wallets for Altana judging: operator 0xc211C942946011859ca634F22400d80570ED12A5; second attestor 0x5e6cBAb6C130C21f329209697e050773f72F92c1; session keys and every grant/execute/revert/revoke tx hash are listed at https://winnow-bsc.onrender.com/proof and in the repo's submission/proof.md (BSC testnet, which the Altana track explicitly accepts; mainnet runbook included). TermiX: required Agent Advantage Report is in the repo (3 real tasks run both ways with timings, costs, rubric, and outputs attached; includes a trading task with window and risk statement).

@@ -12,7 +12,7 @@ const c = (q: string) => (db.prepare(q).get() as any).c;
 const ex = A.explorer;
 const md = `# Winnow Proof
 Generated ${new Date().toISOString()}
-Write-side chain: ${A.id === 97 ? "BSC testnet (97)" : "BSC mainnet (56)"} — every explorer link below is on ${ex}. Market-data reads are BSC mainnet.
+Write-side chain: ${A.id === 97 ? "BSC testnet (97)" : "BSC mainnet (56)"}. Every explorer link below is on ${ex}. Market-data reads are BSC mainnet.
 
 ## Wallets (Altana submission requirement)
 - Operator: 0xc211C942946011859ca634F22400d80570ED12A5
