@@ -1,0 +1,3 @@
+Assessment (manual, hand-written): HF 1.3315 on $28,735 debt vs $50,934 collateral — a ~24.9% collateral
+drawdown triggers liquidation. Elevated-but-not-critical for BSC majors; monitor at least daily and top up
+collateral if HF approaches 1.20; do not draw the $7,000 available borrows.

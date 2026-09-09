@@ -1,0 +1,81 @@
+{
+  "recordedAt": "2026-09-09T04:32:38Z",
+  "operatorNote": "Manual legs executed by the build operator driving a real terminal (cast/python3/jq/curl), commands run sequentially, wall-clock = last-output epoch minus first-command epoch (date -u +%s.%N before/after, receipts inline). Because the operator is automated tooling, recorded times are LOWER BOUNDS on human-at-keyboard time (PRD expectation for Task A alone: 8-15 min).",
+  "runs": [
+    {
+      "task": "A_grid",
+      "startEpoch": 1788928296.654,
+      "endEpoch": 1788928324.153,
+      "timeMs": 27499,
+      "window": "2026-09-09T04:31:36Z to 2026-09-09T04:32:04Z",
+      "gasUsd": 0,
+      "steps": [
+        {
+          "cmd": "cast call 0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865 \"getPool(address,address,uint24)(address)\" 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c 0x55d398326f99059fF775485246999027B3197955 500 --rpc-url https://bsc-dataseed.bnbchain.org",
+          "out": "0x36696169C63e42cd08ce11f5deeBbCeBae652050"
+        },
+        {
+          "cmd": "cast call 0x36696169C63e42cd08ce11f5deeBbCeBae652050 \"slot0()(uint160,int24,uint16,uint16,uint16,uint32,bool)\" --rpc-url https://bsc-dataseed.bnbchain.org",
+          "out": "2890093647823479355499173297 [2.89e27]\n-66225 [-6.622e4]\n252\n900\n900\n222825800 [2.228e8]\ntrue"
+        },
+        {
+          "cmd": "cast call 0xB048Bbc1Ee6b733FFfCFb9e9CeF7375518e25997 \"quoteExactInputSingle((address,address,uint256,uint24,uint160))(uint256,uint160,uint32,uint256)\" \"(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c,0x55d398326f99059fF775485246999027B3197955,1000000000000000000,500,0)\" --rpc-url https://bsc-dataseed.bnbchain.org",
+          "out": "751129181633685342012 [7.511e20]\n2890116940941825253809061879 [2.89e27]\n1\n115281 [1.152e5]"
+        },
+        {
+          "cmd": "cast call 0xB048Bbc1Ee6b733FFfCFb9e9CeF7375518e25997 \"quoteExactInputSingle((address,address,uint256,uint24,uint160))(uint256,uint160,uint32,uint256)\" \"(0x55d398326f99059fF775485246999027B3197955,0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c,751000000000000000000,500,0)\" --rpc-url https://bsc-dataseed.bnbchain.org",
+          "out": "998812343965992763 [9.988e17]\n2890070370730799671698178210 [2.89e27]\n1\n116012 [1.16e5]"
+        },
+        {
+          "cmd": "python3: spot from tick -66225 (1/1.0001^tick), two-sided quoter mid, +/-0.5% grid levels",
+          "out": "spot(tick)      = 751.5734 USDT/WBNB\nsell-side quote = 751.1292 USDT/WBNB (1 WBNB -> USDT)\nbuy-side quote  = 751.8930 USDT/WBNB (751 USDT -> WBNB)\nmid             = 751.5111\ngrid buy  (-0.5%) = 747.75\ngrid sell (+0.5%) = 755.27"
+        }
+      ],
+      "decision": "Place grid buy at 747.75 USDT/WBNB and grid sell at 755.27 USDT/WBNB (mid 751.51 from two-sided quoter, 0.5% step); quoter spread is ~0.10% so both levels sit outside it — do not tighten the grid below the spread."
+    },
+    {
+      "task": "B_health",
+      "startEpoch": 1788928333.528,
+      "endEpoch": 1788928344.506,
+      "timeMs": 10978,
+      "window": "2026-09-09T04:32:13Z to 2026-09-09T04:32:24Z",
+      "gasUsd": 0,
+      "steps": [
+        {
+          "cmd": "cast call 0x6807dc923806fE8Fd134338EABCA509979a7e0cB \"getUserAccountData(address)(uint256,uint256,uint256,uint256,uint256,uint256)\" 0xe5EC006540bE4F7CbB2CBc7Be79708a6d96F90dC --rpc-url https://bsc-dataseed.bnbchain.org",
+          "out": "5093397204012 [5.093e12]\n2873495238986 [2.873e12]\n700032239348 [7e11]\n7512\n7016\n1331537603459537705 [1.331e18]"
+        },
+        {
+          "cmd": "python3: HF/1e18, collateral+debt+availableBorrows/1e8 (base=USD 8dp), threshold/1e4, drop-to-liquidation 1-1/HF",
+          "out": "healthFactor          = 1.3315\ncollateral            = $50,933.97\ndebt                  = $28,734.95\navailableBorrows      = $7,000.32\nliquidationThreshold  = 70.16%\ncollateral drop to liquidation = 24.90%"
+        }
+      ],
+      "decision": "HF 1.3315 on $28,735 debt vs $50,934 collateral — a ~24.9% collateral drawdown triggers liquidation. Elevated-but-not-critical for BSC majors; monitor at least daily and top up collateral if HF approaches 1.20; do not draw the $7,000 available borrows."
+    },
+    {
+      "task": "C_yield",
+      "startEpoch": 1788928349.629,
+      "endEpoch": 1788928358.75,
+      "timeMs": 9121,
+      "window": "2026-09-09T04:32:29Z to 2026-09-09T04:32:38Z",
+      "gasUsd": 0,
+      "steps": [
+        {
+          "cmd": "curl -s \"https://api.venus.io/markets/core-pool?limit=60\" -o /tmp/venus.json && jq -r '[.result[] | {sym: (.symbol // .underlyingSymbol), supplyApy: (.supplyApy|tonumber)}] | map(select(.supplyApy>0)) | sort_by(-.supplyApy) | .[0:5][] | \"\\(.sym)\\t\\(.supplyApy)\"' /tmp/venus.json",
+          "out": "jq: error (at /tmp/venus.json:0): null (null) cannot be parsed as a number   [REAL first-attempt failure — null supplyApy rows]"
+        },
+        {
+          "cmd": "jq -r '[.result[] | {sym: (.symbol // .underlyingSymbol), supplyApy: (.supplyApy // \"0\" | tonumber? // 0)}] | map(select(.supplyApy>0)) | sort_by(-.supplyApy) | .[0:5][] | \"\\(.sym)\\t\\(.supplyApy)\"' /tmp/venus.json",
+          "out": "vU\t2.841263357754776582\nvUSDT\t2.784566173458009274\nvFDUSD\t2.725423995682595935\nvlisUSD\t2.638786189484248351\nvUST\t2.459290588305794942"
+        }
+      ],
+      "decision": "Route the next dollar to vUSDT at 2.78% — vU leads at 2.84% but is a non-stable single-asset market whose 6bp edge does not pay for the concentration risk; vUSDT is the deepest stable market in the top five (vFDUSD 2.73% is the fallback)."
+    }
+  ],
+  "calibration": {
+    "task": "A_grid",
+    "realizedAt": "2026-09-09T04:32:45Z",
+    "cmd": "cast call 0x36696169C63e42cd08ce11f5deeBbCeBae652050 \"slot0()\" (tick) + python3 1/1.0001^tick",
+    "out": "tick -66225 (unchanged); realized spot 751.5734 USDT/WBNB"
+  }
+}

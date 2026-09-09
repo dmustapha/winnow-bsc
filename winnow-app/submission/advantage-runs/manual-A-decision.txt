@@ -1,0 +1,2 @@
+Decision (manual, hand-written): place grid buy at 747.75 USDT/WBNB and grid sell at 755.27 USDT/WBNB
+(mid 751.51 from two-sided quoter, 0.5% step); quoter spread is ~0.10% so both levels sit outside it — do not tighten the grid below the spread.

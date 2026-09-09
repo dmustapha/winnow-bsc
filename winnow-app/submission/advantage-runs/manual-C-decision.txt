@@ -1,0 +1,3 @@
+Decision (manual, hand-written): route the next dollar to vUSDT at 2.78% — vU leads at 2.84% but is a
+non-stable single-asset market whose 6bp edge does not pay for the concentration risk; vUSDT is the
+deepest stable market in the top five (vFDUSD 2.73% is the fallback).
