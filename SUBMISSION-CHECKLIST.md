@@ -23,7 +23,7 @@
 ## Honesty gates
 - [PASS] Zero em-dashes in judge-facing prose (README, description, proof.md, CLAIMS.md, AGENT-ADVANTAGE prose); em-dashes preserved only inside verbatim LLM-output and transcript blocks
 - [PASS] proof.md current: session #6 (live) + session #7 capped-spend lifecycle + live counters noted; all 18 tx hashes status 0x1
-- [PASS] Testnet-vs-mainnet stated honestly; LLM state stated honestly (pluggable gateway, real reasoning present, live ticking host-env-dependent)
+- [PASS] Testnet-vs-mainnet stated honestly; the demo runs on testnet (Altana accepts it) AND the ERC-8004 write path is proven on BSC mainnet (4 registrations + liveness attestation, ids 342419-342422, receipts 0x1 on bscscan.com). LLM state honest (pluggable gateway, real reasoning present, live ticking host-env-dependent)
 - [PASS] HONESTY-LEDGER covers Real / Simplified / Not-built
 - [PASS] LICENSE present (MIT)
 

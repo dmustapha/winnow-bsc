@@ -5,7 +5,7 @@ BNB Chain Build the Era (Smart Money Era). Main track: BNB Agent Studio Marketpl
 - **Live and public:** https://winnow-bsc.onrender.com (stays up through the Sep 9 to 23 judging window).
 - **Proof page (recomputable):** https://winnow-bsc.onrender.com/proof mirrors wallets, receipts, counters, and recompute paths.
 - **Open source:** https://github.com/dmustapha/winnow-bsc
-- **Onchain receipts:** every attestation and session tx is committed at `winnow-app/submission/proof.md`, each with a BSC testnet explorer link; 18 of 18 receipts verify status 0x1.
+- **Onchain receipts:** every attestation and session tx is committed at `winnow-app/submission/proof.md`, each with an explorer link; 18 of 18 testnet receipts verify status 0x1, plus the write path is proven on BSC mainnet (four reference-agent registrations, ids 342419 to 342422, and a liveness attestation, receipts status 0x1 on bscscan.com).
 - **TermiX Agent Advantage Report:** three real tasks run both ways with wall-clocks, costs, a rubric, and every output attached (`winnow-app/submission/AGENT-ADVANTAGE-REPORT.md`).
 - Everything below is implemented and runnable today.
 

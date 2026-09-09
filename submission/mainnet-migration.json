@@ -1,0 +1,38 @@
+{
+  "chain": 56,
+  "operator": "0xc211C942946011859ca634F22400d80570ED12A5",
+  "registrations": [
+    {
+      "name": "Winnow Sentinel",
+      "category": "health-factor",
+      "tokenId": 342419,
+      "tx": "0x1ca72a7853867ead7b8774c5b87b144f13aa122b5a91810909373671fcda2cb8"
+    },
+    {
+      "name": "Winnow Harvester",
+      "category": "yield",
+      "tokenId": 342420,
+      "tx": "0xa38554e8293c8e09c7c1ce436cc612be6a098ae67719610174b8eee8496d663a"
+    },
+    {
+      "name": "Winnow Ranger",
+      "category": "rebalancing",
+      "tokenId": 342421,
+      "tx": "0x68a7f013d51fb68b428a69acd08a0b25b03900b788e501529db555a6b181ba9e"
+    },
+    {
+      "name": "Winnow Gridsmith",
+      "category": "grid-trading",
+      "tokenId": 342422,
+      "tx": "0xf7cf463aafcc077d553c0c9b12a28e27638cead51eb793142c7400a2d812453b"
+    }
+  ],
+  "attestation": {
+    "tokenId": 342419,
+    "tag": "liveness",
+    "value": 32,
+    "tx": "0xf645d888bafbd28e07c85ec3c63aab612e3b4af31f68a6414a8d0b77972bdef6"
+  },
+  "fundAttestor2Tx": "0x336d725e4ae5265255ae565bd795f2cfb150c48b6805e2d8d68088bc03168bcf",
+  "operatorRemainingBnb": 0.00072922995
+}

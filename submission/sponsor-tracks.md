@@ -1,6 +1,6 @@
 # Sponsor Track Justifications
 
-Every claim below is grep-verifiable in the repo and receipt-backed in `winnow-app/submission/proof.md`. Writes run on BSC testnet (chainId 97), which the Altana track explicitly accepts; market-data reads run on BSC mainnet (chainId 56). All 18 committed tx receipts verify status 0x1 on the testnet RPC.
+Every claim below is grep-verifiable in the repo and receipt-backed in `winnow-app/submission/proof.md`. The deployed demo writes on BSC testnet (chainId 97), which the Altana track explicitly accepts; market-data reads run on BSC mainnet (chainId 56). All 18 committed testnet tx receipts verify status 0x1, and the ERC-8004 write path is additionally proven on BSC mainnet (four reference-agent registrations plus a liveness attestation, ids 342419 to 342422, receipts status 0x1 on bscscan.com).
 
 ## Altana: Best Built with Altana (50K XP, winner-take-all)
 

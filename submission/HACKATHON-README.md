@@ -60,4 +60,4 @@ Solo submission by Damilola Mustapha (GitHub @dmustapha, X @capitanoo23).
 ## Demo Notes
 - **Real:** live probes and grades, onchain attestations and Altana session lifecycle (testnet), 93 LLM-reasoned agent actions, four live A2A cards.
 - **Seeded:** the committed snapshot database for offline recompute; the live host indexes and grades continuously on top of it.
-- **Network:** writes on BSC testnet (chainId 97), market-data reads on BSC mainnet (chainId 56). Chain labels are shown per row. Mainnet migration is documented and pending a small gas top-up.
+- **Network:** the deployed demo writes on BSC testnet (chainId 97), market-data reads on BSC mainnet (chainId 56); chain labels are shown per row. The write path is also proven on BSC mainnet (all four reference agents registered, ids 342419 to 342422, plus a liveness attestation, receipts status 0x1 on bscscan.com; see proof.md). The Altana track accepts testnet, so the demo stays on testnet for zero-cost judging.

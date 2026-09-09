@@ -56,3 +56,12 @@ Write-side chain: BSC testnet (97). Every explorer link below is on https://test
 
 ## Agent action txs
 - hf_check https://testnet.bscscan.com/tx/0x3936ca8b0417fc9a4f3d8a254a6c8637710294ebfd9db2f5188600a5cdb64fe1
+
+## Mainnet migration (BSC mainnet, chain 56: live write-path proof)
+Executed 2026-09-09 with the funded operator wallet. Same code as testnet; explorer links are mainnet https://bscscan.com. Proof JSON: submission/mainnet-migration.json.
+- Winnow Sentinel (health-factor): agent #342419, register tx https://bscscan.com/tx/0x1ca72a7853867ead7b8774c5b87b144f13aa122b5a91810909373671fcda2cb8
+- Winnow Harvester (yield): agent #342420, register tx https://bscscan.com/tx/0xa38554e8293c8e09c7c1ce436cc612be6a098ae67719610174b8eee8496d663a
+- Winnow Ranger (rebalancing): agent #342421, register tx https://bscscan.com/tx/0x68a7f013d51fb68b428a69acd08a0b25b03900b788e501529db555a6b181ba9e
+- Winnow Gridsmith (grid-trading): agent #342422, register tx https://bscscan.com/tx/0xf7cf463aafcc077d553c0c9b12a28e27638cead51eb793142c7400a2d812453b
+- Liveness attestation on #342419 (Reputation 0x8004BAa17C55a88189AE136b182e5fdA19dE9b63, second signer per spec): https://bscscan.com/tx/0xf645d888bafbd28e07c85ec3c63aab612e3b4af31f68a6414a8d0b77972bdef6
+- All receipts status 0x1, mainnet blocks 120940475-120940504. Gas spent ~0.00027 BNB.
