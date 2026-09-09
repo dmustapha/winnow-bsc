@@ -3,25 +3,41 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  color-scheme: dark;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #09090b; /* zinc-950 */
+  color: #f4f4f5; /* zinc-100 */
+}
+
+/* Craft floor: visible keyboard focus everywhere */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible {
+  outline: 2px solid #10b981; /* emerald-500 */
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+a,
+button {
+  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+::selection {
+  background: rgba(16, 185, 129, 0.35);
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  .card {
+    @apply rounded-lg border border-zinc-800 bg-zinc-900/40 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.03)];
+  }
+  .card-hover {
+    @apply hover:border-zinc-600 hover:bg-zinc-900/70 hover:shadow-[0_4px_24px_-8px_rgba(0,0,0,0.6)];
   }
 }
