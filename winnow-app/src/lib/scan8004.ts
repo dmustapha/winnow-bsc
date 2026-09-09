@@ -22,7 +22,7 @@ export function upsertAgent(it: any) {
   UP.run({
     chain_id: it.chain_id, token_id: Number(it.token_id), name: it.name ?? `Agent #${it.token_id}`,
     description: it.description ?? "", owner: it.owner_address ?? "", image_url: it.image_url ?? "",
-    mcp: it.mcp_server ?? svc?.mcp?.endpoint ?? null, a2a: it.a2a_endpoint ?? null,
+    mcp: it.mcp_server ?? svc?.mcp?.endpoint ?? null, a2a: it.a2a_endpoint ?? svc?.a2a?.endpoint ?? null, // DEV-004: detail responses carry a2a under services.a2a.endpoint
     x402: it.x402_supported ? 1 : 0, fb: it.total_feedbacks ?? 0, score: it.average_score ?? null,
     created: it.created_at ?? null,
   });
