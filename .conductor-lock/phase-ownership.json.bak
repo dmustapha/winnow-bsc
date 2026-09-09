@@ -1,5 +1,5 @@
 {
-  "phase": "url_preverify",
-  "conductor_state_checksum": "caf19ae8baba1002b01ee94d6e6ac531b73aaf214e86978b11f996fc82bd3ccd",
-  "captured_at": "2026-09-09T03:33:10Z"
+  "phase": "build",
+  "conductor_state_checksum": "0011291f0368643b4399c8a711bf4d04e3fd562cb816ee67a96beaf766362dc4",
+  "captured_at": "2026-09-09T03:34:08Z"
 }

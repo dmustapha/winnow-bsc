@@ -33,3 +33,4 @@ Inputs: winnow/{PRD,ARCHITECTURE,PLAN,INVARIANTS}.md, warroom/WINNER-BRIEF.md, r
 2026-09-09T04:47:24Z | debug | START | debug | Dispatching debug
 2026-09-09T04:48:35Z | hackathon-debug | START | phase-1 | full mode, ~7.2h to deadline
 2026-09-09T05:08:22Z | hackathon-debug | COMPLETE | fix_round | confidence 90, 0 unresolved, 10 fixes, 8 DH handoffs, PROCEED
+2026-09-09T05:09:31Z | debug | COMPLETE | debug | gate=pass verdict=pass_with_blockers (1 lens contract(s) MISSING (MISSING != SAME); no VERIFIED facts in PULSE section; ship-check: git: 8 uncommitted change(s) beyond pipeline state files;git: 2 commit(s) not pushed to origin/main (tags are not pushes);hygiene: 9 pipeline-state/.env file(s) TRACKED in the repo)

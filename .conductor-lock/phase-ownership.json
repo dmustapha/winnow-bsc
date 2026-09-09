@@ -1,5 +1,5 @@
 {
-  "phase": "build",
-  "conductor_state_checksum": "0011291f0368643b4399c8a711bf4d04e3fd562cb816ee67a96beaf766362dc4",
-  "captured_at": "2026-09-09T03:34:08Z"
+  "phase": "debug",
+  "conductor_state_checksum": "8fc169ce5dcfde9979c4ff291cb6cd4ec070e2c287a5ef3b45704698107a72c7",
+  "captured_at": "2026-09-09T04:47:24Z"
 }

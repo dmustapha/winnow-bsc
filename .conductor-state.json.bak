@@ -98,11 +98,14 @@
         "verdict": "pass"
       },
       "build": {
-        "status": "running",
-        "dispatched_at": "2026-09-09T03:34:08Z"
+        "status": "complete_with_blockers",
+        "dispatched_at": "2026-09-09T03:34:08Z",
+        "completed_at": "2026-09-09T04:47:16Z",
+        "verdict": "pass_with_blockers"
       },
       "debug": {
-        "status": "pending"
+        "status": "running",
+        "dispatched_at": "2026-09-09T04:47:24Z"
       },
       "wire": {
         "status": "pending"
@@ -177,5 +180,13 @@
     "status": "complete",
     "verdict": "proceed",
     "elevations_applied": 4
+  },
+  "buildState": {
+    "status": "complete",
+    "contractAddresses": {},
+    "deviationCount": 13,
+    "untestedDeviationCount": 0,
+    "knownRiskCount": 4,
+    "repo": "https://github.com/dmustapha/winnow-bsc"
   }
 }
