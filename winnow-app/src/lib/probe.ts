@@ -45,7 +45,8 @@ function feedbackScore(a: any): { feedback: number; fbDetail: string } {
   const s = a?.scan_score ?? 0;
   const plausible = s > 0 && s < 100 && n < 500; // perfect-100 mass-feedback = farm signature
   return plausible ? { feedback: 24, fbDetail: `n=${n} avg=${s} plausible-range` }
-                   : { feedback: 6, fbDetail: `n=${n} avg=${s} farm-pattern (uniform/extreme volume)` };
+                   // DEBUG FIX (INVARIANT 2 spirit): descriptive, not accusatory — transcript renders on the agent's public page
+                   : { feedback: 6, fbDetail: `n=${n} avg=${s} outside plausible range (uniform or extreme volume) — insufficient independently-validated feedback` };
 }
 function trackScore(chainId: number, tokenId: number): number {
   const acts = db.prepare("SELECT COUNT(*) c FROM agent_actions WHERE agent_token=?").get(tokenId) as any;

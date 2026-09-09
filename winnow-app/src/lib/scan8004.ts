@@ -2,17 +2,25 @@
 import { db, kvGet, kvSet } from "./db";
 import { SCAN_API } from "./config";
 let lastCall = 0;
-async function paced(url: string): Promise<any | null> {
+async function pacedOnce(url: string): Promise<{ transient: boolean; json: any | null }> {
   const today = new Date().toISOString().slice(0, 10);
   const budget = JSON.parse(kvGet("scan_budget") ?? "{}");
-  if (budget.day === today && budget.n >= 900) return null; // daily cap guard
+  if (budget.day === today && budget.n >= 900) return { transient: false, json: null }; // daily cap guard
   const wait = Math.max(0, lastCall + 2300 - Date.now());
   if (wait) await new Promise((r) => setTimeout(r, wait));
   lastCall = Date.now();
   kvSet("scan_budget", JSON.stringify({ day: today, n: budget.day === today ? budget.n + 1 : 1 }));
   const res = await fetch(url, { signal: AbortSignal.timeout(15000) }).catch(() => null);
-  if (!res || !res.ok) return null;
-  return res.json().catch(() => null);
+  // transient = network error / timeout / 5xx / 429 — worth exactly ONE retry (DEV-006 fix)
+  if (!res) return { transient: true, json: null };
+  if (!res.ok) return { transient: res.status >= 500 || res.status === 429, json: null };
+  return { transient: false, json: await res.json().catch(() => null) };
+}
+async function paced(url: string): Promise<any | null> {
+  const first = await pacedOnce(url);
+  if (first.json !== null || !first.transient) return first.json;
+  await new Promise((r) => setTimeout(r, 2500)); // brief backoff, then one retry (budget+pacing still apply)
+  return (await pacedOnce(url)).json;
 }
 const UP = db.prepare(`INSERT INTO agents(chain_id,token_id,name,description,owner,image_url,mcp_server,a2a_endpoint,x402,scan_feedbacks,scan_score,created_at)
  VALUES(@chain_id,@token_id,@name,@description,@owner,@image_url,@mcp,@a2a,@x402,@fb,@score,@created)

@@ -89,7 +89,8 @@ export async function gridTick(pool?: `0x${string}`): Promise<StrategyResult> {
     const slot0 = (await pubMain.readContract({ address: pool, abi: SLOT0_ABI as any, functionName: "slot0" })) as any;
     spot = ` Live spot from pool tick ${Number(slot0[1])}: ~${usdtPerWbnbFromTick(Number(slot0[1])).toFixed(2)} USDT/WBNB.`;
   }
-  const reasoning = await reason(`Grid-trading analysis for BSC WBNB/USDT 0.05% pool, grid step 0.5%.${spot} Compute the next buy level (-0.5% from spot) and next sell level (+0.5% from spot) and justify in one sentence. Output the two price levels and the justification only.`);
+  // DEV-503 fix: trading reasoning must carry an explicit risk statement (TermiX: trading agents need window + risk, never bare signals)
+  const reasoning = await reason(`Grid-trading analysis for BSC WBNB/USDT 0.05% pool, grid step 0.5%.${spot} Compute the next buy level (-0.5% from spot) and next sell level (+0.5% from spot) and justify in one sentence. Then add exactly one sentence starting "Risk:" stating the downside if price trends beyond the grid range. Output only the two price levels, the justification, and the Risk sentence.`);
   return { kind: "grid_step", detail: JSON.stringify({ pair: "WBNB/USDT", step: "0.5%" }), reasoning };
 }
 

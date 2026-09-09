@@ -3,8 +3,30 @@ import { indexTick } from "./lib/scan8004";
 import { gradeAgent } from "./lib/grade";
 import { db, kvGet } from "./lib/db";
 import * as S from "./lib/agents/strategies";
+import fs from "node:fs";
+import path from "node:path";
 
 const REF = () => JSON.parse(kvGet("reference_agents") ?? "[]") as { name: string; tokenId: number; category: string }[];
+
+// DEBUG FIX (C3 pidfile collision): single-instance guard. Two live workers double the
+// 8004scan budget burn and race the prober. Stale pids (kill -9) are detected via signal-0
+// liveness check and taken over; a live holder makes this start a no-op.
+const PIDFILE = path.join(process.cwd(), "data", "worker.pid");
+function acquireWorkerLock(): boolean {
+  try {
+    const prev = Number(fs.readFileSync(PIDFILE, "utf8").trim());
+    if (prev && prev !== process.pid) {
+      try { process.kill(prev, 0); return false; } // holder alive → refuse to start
+      catch { /* stale pidfile (holder dead) → take over */ }
+    }
+  } catch { /* no pidfile yet */ }
+  fs.mkdirSync(path.dirname(PIDFILE), { recursive: true });
+  fs.writeFileSync(PIDFILE, String(process.pid));
+  process.on("exit", () => {
+    try { if (Number(fs.readFileSync(PIDFILE, "utf8").trim()) === process.pid) fs.unlinkSync(PIDFILE); } catch { }
+  });
+  return true;
+}
 
 async function loop(name: string, ms: number, fn: () => Promise<void>) {
   while (true) {
@@ -20,6 +42,10 @@ const PCS_POOL = (process.env.PCS_POOL ?? "0x36696169C63e42cd08ce11f5deeBbCeBae6
 const WATCH_ADDR = (process.env.WATCH_ADDR ?? "0xe5EC006540bE4F7CbB2CBc7Be79708a6d96F90dC") as `0x${string}`;
 
 export function startWorker() {
+  if (!acquireWorkerLock()) {
+    console.error(`[worker] another instance holds ${PIDFILE} — not starting a second worker`);
+    return;
+  }
   loop("indexer", 2500, async () => { if (!kvGet("scan_done")) await indexTick(); else await new Promise((r) => setTimeout(r, 60000)); });
   loop("prober", 20000, async () => {
     const next = db.prepare(`SELECT a.chain_id, a.token_id FROM agents a LEFT JOIN grades g ON g.chain_id=a.chain_id AND g.token_id=a.token_id

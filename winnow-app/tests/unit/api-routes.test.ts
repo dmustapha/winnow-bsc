@@ -35,8 +35,18 @@ async function main() {
     assert.equal(r.status, 200);
     const { items } = await r.json();
     assert.ok(Array.isArray(items) && items.length > 0, "expected indexed agents in list");
-    assert.ok(items.some((a: any) => a.letter == null), "ungraded agents must be LISTED (INVARIANT 3)");
-    ok(`agents lists ${items.length} rows incl. ungraded`);
+    // INVARIANT 3: ungraded ≠ unlisted. Page 0 can legitimately be all-graded as the
+    // fastgrader progresses, so pick a known-ungraded agent from the DB and assert the
+    // API returns it with letter=null (debug fix: page-0 sample went stale as grading grew).
+    const ungraded = db.prepare(
+      "SELECT a.name FROM agents a LEFT JOIN grades g ON g.chain_id=a.chain_id AND g.token_id=a.token_id WHERE g.score IS NULL AND length(a.name) > 6 AND (SELECT COUNT(*) FROM agents x WHERE x.name = a.name) = 1 LIMIT 1"
+    ).get() as { name: string } | undefined;
+    assert.ok(ungraded, "expected at least one ungraded agent while probing is in progress");
+    const ru = agents.GET(new Request(`http://x/api/agents?q=${encodeURIComponent(ungraded!.name.slice(0, 40))}`));
+    assert.equal(ru.status, 200);
+    const ju = await ru.json();
+    assert.ok(ju.items.some((a: any) => a.letter == null), "ungraded agents must be LISTED (INVARIANT 3)");
+    ok(`agents lists ${items.length} rows; ungraded '${ungraded!.name}' listed with letter=null`);
 
     const rc = agents.GET(new Request("http://x/api/agents?cat=health-factor"));
     assert.equal(rc.status, 200);
