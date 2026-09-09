@@ -9,6 +9,24 @@ import { db } from "../db";
 const MODEL = "claude-haiku-4-5-20251001";
 const claude = ANTHROPIC_KEY ? new Anthropic({ apiKey: ANTHROPIC_KEY }) : null;
 
+// D-3 CLOSURE: pluggable OpenAI-compatible backend (AgentRouter etc.) — real hosted reasoning on Render.
+// LLM_BASE_URL + LLM_API_KEY + LLM_MODEL (+ optional LLM_UA: some gateways whitelist client user-agents).
+const OAI_BASE = process.env.LLM_BASE_URL ?? "";
+const OAI_KEY = process.env.LLM_API_KEY ?? "";
+const OAI_MODEL = process.env.LLM_MODEL ?? "deepseek-v4-flash";
+async function reasonViaOpenAICompat(prompt: string): Promise<string> {
+  const r = await fetch(`${OAI_BASE.replace(/\/$/, "")}/chat/completions`, {
+    method: "POST",
+    headers: { "content-type": "application/json", authorization: `Bearer ${OAI_KEY}`, "user-agent": process.env.LLM_UA ?? "claude-cli/2.0.14 (external, cli)" },
+    body: JSON.stringify({ model: OAI_MODEL, max_tokens: 200, messages: [{ role: "user", content: prompt }] }),
+    signal: AbortSignal.timeout(60000),
+  });
+  if (!r.ok) throw new Error(`LLM compat HTTP ${r.status}`);
+  const t = (await r.json())?.choices?.[0]?.message?.content?.trim() ?? "";
+  if (!t) throw new Error("empty compat response");
+  return t;
+}
+
 // DEV-302 (Class: creds): every discoverable ANTHROPIC_API_KEY has zero credit.
 // Fallback backend = local `claude -p` CLI (Max subscription) — REAL Claude haiku reasoning,
 // never canned text. If BOTH backends fail the action is SKIPPED and logged (ESCALATE-DON'T-FABRICATE).
@@ -33,6 +51,10 @@ async function reason(prompt: string): Promise<string> {
     } catch (e) {
       console.error("[reason] API backend failed, trying CLI:", (e as any)?.message?.slice(0, 100));
     }
+  }
+  if (OAI_BASE && OAI_KEY) {
+    try { return await reasonViaOpenAICompat(prompt); }
+    catch (e) { console.error("[reason] compat backend failed, trying CLI:", (e as any)?.message?.slice(0, 100)); }
   }
   try { return await reasonViaCli(prompt); }
   catch { throw new Error("no working LLM backend — skip action (never fabricate)"); }
