@@ -104,11 +104,14 @@
         "verdict": "pass_with_blockers"
       },
       "debug": {
-        "status": "running",
-        "dispatched_at": "2026-09-09T04:47:24Z"
+        "status": "complete",
+        "dispatched_at": "2026-09-09T04:47:24Z",
+        "completed_at": "2026-09-09T05:09:44Z",
+        "verdict": "pass_with_blockers"
       },
       "wire": {
-        "status": "pending"
+        "status": "running",
+        "dispatched_at": "2026-09-09T05:09:54Z"
       },
       "verify_milestone": {
         "status": "pending"
@@ -188,5 +191,11 @@
     "untestedDeviationCount": 0,
     "knownRiskCount": 4,
     "repo": "https://github.com/dmustapha/winnow-bsc"
+  },
+  "debugState": {
+    "status": "complete",
+    "confidence": 90,
+    "fixes": 10,
+    "unresolved": 0
   }
 }

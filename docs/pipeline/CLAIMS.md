@@ -2,9 +2,10 @@
 
 | Phase | Verdict | Reason | State status | Updated |
 |---|---|---|---|---|
-| intel | pass | — | complete | 2026-09-09T05:09:31Z |
-| warroom | pass | — | complete | 2026-09-09T05:09:31Z |
-| forge | pass | — | complete | 2026-09-09T05:09:31Z |
-| critique | pass | — | complete | 2026-09-09T05:09:31Z |
-| build | pass | — | complete | 2026-09-09T05:09:31Z |
-| debug | pass_with_blockers | 1 lens contract(s) MISSING (MISSING != SAME) | complete | 2026-09-09T05:09:31Z |
+| intel | pass | — | complete | 2026-09-09T05:23:31Z |
+| warroom | pass | — | complete | 2026-09-09T05:23:31Z |
+| forge | pass | — | complete | 2026-09-09T05:23:31Z |
+| critique | pass | — | complete | 2026-09-09T05:23:31Z |
+| build | pass | — | complete | 2026-09-09T05:23:31Z |
+| debug | pass_with_blockers | 1 lens contract(s) MISSING (MISSING != SAME) | complete | 2026-09-09T05:23:31Z |
+| wire | pass_with_blockers | wire=WIRED-WITH-DEGRADATION | WIRED-WITH-DEGRADATION | 2026-09-09T05:23:31Z |

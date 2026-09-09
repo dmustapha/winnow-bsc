@@ -14,12 +14,13 @@
 |----|-----------|-------------|:---:|------|-----------|:------:|
 | D-2 | forge | package | MED | PRD.md has 37 em-dash/voice-pattern hits (internal doc) — ensure ZERO banned patterns in user-facing copy (README, submission description, demo VO) per Dami no-em-dash rule | grep -c em-dash on shipped copy = 0 | open |
 | D-1 | warroom | deploy | HIGH | Fund 0xc211C942946011859ca634F22400d80570ED12A5 with ~0.01 BNB on BSC mainnet (Dami, morning) then run mainnet attestation+session runbook | mainnet txs visible on BscScan + Altana explorer | open |
-| DH-1 | debug | wire | P1 | KNOWN-RISKS handoff: DEV-302/502 — all API keys credit-dry; local runs use `claude -p` CLI (proven live in debug); Fly has no CLI | wire proves a working LLM provider on the deploy host (funded key or AltLLM) OR verifies skip-and-log path + honest banner renders | open |
-| DH-2 | debug | wire | P1 | KNOWN-RISKS handoff: reference agents' a2a_endpoints point at localhost:3000 (testnet ids 2288-2291) — dead from any public URL | deploy rewrites endpoints to Fly URL + scripts/regrade-refs.mts re-probes; wire proves cards reachable publicly and grades stay honest (C, not F) | open |
+| DH-1 | debug | wire | P1 | KNOWN-RISKS handoff: DEV-302/502 — all API keys credit-dry; local runs use `claude -p` CLI (proven live in debug); Fly has no CLI | wire proves a working LLM provider on the deploy host (funded key or AltLLM) OR verifies skip-and-log path + honest banner renders | done-with-note |
+| W-1 | wire | deploy | P1 | No dedicated "LLM degraded" UI banner — if Fly runs without funded key, agent staleness only visible via action timestamps; land funded ANTHROPIC key (D-3) or add honest degraded banner | Fly either reasons live or renders explicit degraded state | open |
+| DH-2 | debug | wire | P1 | KNOWN-RISKS handoff: reference agents' a2a_endpoints point at localhost:3000 (testnet ids 2288-2291) — dead from any public URL | deploy rewrites endpoints to Fly URL + scripts/regrade-refs.mts re-probes; wire proves cards reachable publicly and grades stay honest (C, not F) | mechanism-verified |
 | DH-3 | debug | verify_milestone | P1 | KNOWN-RISKS handoff (from critique): "testnet-first vs LIVE on BSC" eligibility drift — recheck demo-path chain labels after DT-2 mainnet runbook runs (or doesn't) | demo path shows honest chain labels; if unfunded at 10:30 UTC, submit-as-is branch documented | open |
 | DH-4 | debug | stress_test | P2 | KNOWN-RISKS handoff: test:source ratio 0.13 (5 aggregate test files / 39 sources) — edge/boundary coverage thin (grade formula bounds, probe malformed responses, api fuzz) | stress plan covers grade/probe/api edge classes; failures triaged | open |
 | DH-5 | debug | stress_test | P2 | AI-agent edge classes (AgentAuditor): infinite loop, tool hallucination, cost blowup (LLM tick every 120s ×4 agents), prompt injection via external market-data strings, concurrent state, context overflow, per-instance config isolation | stress executes each class against worker strategies + reason() fallback chain | open |
-| DH-6 | debug | wire | P2 | KNOWN-RISKS handoff: paced() retry-once proven via stubbed fetch only (deterministic 5xx not triggerable on demand) | wire observes real 8004scan calls under live budget (indexer ticking, budget counter sane, no double-burn) | open |
+| DH-6 | debug | wire | P2 | KNOWN-RISKS handoff: paced() retry-once proven via stubbed fetch only (deterministic 5xx not triggerable on demand) | wire observes real 8004scan calls under live budget (indexer ticking, budget counter sane, no double-burn) | done |
 | DH-7 | debug | stress_test | P3 | Duplicate-name agent floods (e.g. "Ave.ai Trading Agent" ×100+ graded F fills search pages) — ranking/search behavior under name spam | search for a flooded name still surfaces distinct agents; no page dead-ends | open |
 | DH-8 | debug | verify_milestone | P2 | Landing counter honesty: withEndpoints=5 while index at 19,307/310K and growing — ensure copy never implies full-registry endpoint coverage | counters + copy consistent with MUST-NOT-CLAIM rows at demo time | open |
 
@@ -183,6 +184,42 @@
 #### For Next Skill
 - wire: action DH-1/DH-2/DH-6 (P1s first). Session 5 live for demos — do NOT revoke it; overcap-demo has 60s/session cooldown, revoke now 10s cooldown. Worker pidfile lock means only ONE worker (Next instrumentation) — run-worker.mts will refuse while the server runs (by design).
 - verify_milestone: DH-3 chain-label drift + DH-8 counter honesty; activate response shape changed (sessionId/wallet/agentWallet/grantTx) — update any consumer expectations.
+
+### wire — 2026-09-09T05:20Z
+
+#### Done
+- Full 6-phase wire, autonomous. **WIRED-WITH-DEGRADATION** — 11 connections: 9 PASS / 1 PARTIAL (Anthropic) / 1 SKIPPED (Fly, deploy-owned). 0 failures, 0 fixes needed, 0 sentinel hits, 0 mock flags. WIRE-REPORT.md + .wire-state.json written. Dev server started and killed cleanly (port 3000 clear, pidfile released).
+
+#### Additions
+- [NEW] F-003 witnessed with a NEW real attestation: giveFeedback(2288, "liveness", 32 — measured from probe_log 462) → tx 0xd09508a9d8efb27b22000e645d7977ad54831f4614647f5ad3df6518f6e22280, receipt status 0x1, block 129965336, attestations row 3, signed by ATTESTOR2 (own-agent path exercised live).
+- [NEW] F-004 witnessed: Keystore isValidKey(session 5) = true (live testnet read) + overcap-demo → reverted:true ExceededSpendLimit, session 5 STILL LIVE (not revoked).
+- [NEW] Live probe of OpenOdds 56/49637 via POST /api/reprobe: probeLogId 1423, mcp_initialize HTTP 200 + a2a_card ok, honest C/59, 3.0s.
+- [NEW] Index grew 29,007→33,207 agents DURING wire (F-001); scan_budget counter sane (369/900 day); verify-claims exit 0 (orphanGrades 0, negativeAttestations 0 — F-002).
+- [NEW] Evidence scripts kept: scripts/wire-keycheck.mts, wire-attest.mts, wire-tick.mts (reproducible).
+
+#### Deviations
+- [SKILL] app→Fly connection SKIPPED (deploy-phase owned); local /api/stats 200 stand-in per Integration Map health check.
+- [AUTO] /api/activate not re-run (would burn a real session grant + cooldown); debug already proved the flow. Latency marked NOT-TESTED (~8s est).
+
+#### Verified Facts
+- BSC RPCs live (testnet block 0x7bf1b4c, mainnet 0x733916f); Aave getUserAccountData(WATCH_ADDR) real (HF 1.3349, debt $28.8k); PCS slot0 live tick; VenusLens has code; Venus API real data. 8004scan list+detail+feedbacks all real payloads.
+- Anthropic API key credit-dry (400) → `claude -p` CLI fallback returned REAL haiku reasoning in 12.9s (DEV-302 confirmed; Fly will run LLM-degraded without funded key).
+- API route contracts: /api/agents takes `cat=` (not `category=`); /api/reprobe takes `{chain,id}` (not chainId/tokenId) — downstream consumers take note.
+- testnet.bscscan.com returns 403 to curl (Cloudflare) — tx links must be browser-verified before demo; RPC receipts are the authoritative proof.
+
+#### Assumptions
+- [ASSUMED] Unauthenticated mutating endpoints (activate/revoke/reprobe/overcap) are BY DESIGN (walletless judge path AC-1, server-held custody D-12, cooldowns 20-60s) — not flagged as AUTH-GAP; residual operator-gas-spend risk routed to stress.
+
+#### Blockers for Downstream
+- None hard. Degradations: (1) DEV-302/D-3 LLM on Fly, (2) DH-2 localhost a2a endpoints until deploy rewrite, (3) D-1 mainnet unfunded.
+
+#### Key Decisions
+- [AUTO] Status WIRED-WITH-DEGRADATION (not WIRED): declared Anthropic API path strictly failed (credit-dry) and its working fallback does not exist on the deploy host — honest label per DEV-302.
+- [AUTO] DH-1 → done-with-note (provider + skip-and-log proven; no dedicated degraded banner → new row W-1, owner deploy). DH-2 → mechanism-verified. DH-6 → done.
+
+#### For Next Skill
+- verify_milestone: Step 3 demo path — session 5 LIVE, do NOT revoke; cooldowns: overcap 60s/session, reprobe 20s/agent, activate 60s global. Wait guidance: reprobe ~3s, overcap ~4s, attest ~6s, LLM tick ~13s (SLOW — spinner/wait marker). DH-3 + DH-8 are yours. API params: `cat=`, `{chain,id}`.
+- deploy: W-1 (funded LLM key or degraded banner), DH-2 rewrite + scripts/regrade-refs.mts, D-1 mainnet funding, keep host awake Sep 9-23.
 
 ## Cross-Review
 
