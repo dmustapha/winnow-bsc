@@ -41,9 +41,10 @@ Write-side chain: BSC testnet (97). Every explorer link below is on https://test
   - revoke https://testnet.bscscan.com/tx/0x98660860c5c6bc6b77b8f6349438d774d8e137d91119c936079040d5bed3226c
 - #5 agent#2288 cap=5000000000000000wei expiry=1789013634 status=live
   - grant https://testnet.bscscan.com/tx/0x569185684eea4ac90ea3ece3ec716a1f29d142e09d003a4969b9a25bc76b6697
-- #6 agent#2288 cap=5000000000000000wei (0.005 BNB) expiry=1789156594 status=live (standing judging-window session; session_key 0x8021d4Ab4f244758209AD04716B437bbE347dE2D)
-  - grant https://testnet.bscscan.com/tx/0x08e0a0215801840eaf1a61bd77522014588891f41351f669584165ce8948d875
-  - Live-verified via https://winnow-bsc.onrender.com/api/sessions ; do NOT revoke during judging.
+- #6 agent#2288 cap=5000000000000000wei (0.005 BNB) status=live (standing judging-window session; re-granted every ~2 days to keep the Altana leash live through Sep 23)
+  - Current grant tx (2026-09-09, expiry 1789157899, session_key 0x6bc302C9275e41219de9E37506315F0CFFf6F761): https://testnet.bscscan.com/tx/0x49e8cf5195039672367728b062f27968f6b2af6bf84575babe96d35d885f7251
+  - Prior grant (still valid onchain): https://testnet.bscscan.com/tx/0x08e0a0215801840eaf1a61bd77522014588891f41351f669584165ce8948d875
+  - The live standing session is always the current #6 at https://winnow-bsc.onrender.com/api/sessions (a redeploy reseeds and the standing session is re-granted). Do NOT revoke it during judging.
 
 ## Session lifecycle receipts (INVARIANT 5)
 - In-cap execute (session #4 path, 0.0001 BNB signed by the session key, inside the cap): https://testnet.bscscan.com/tx/0xe22694b915ac1ef35f4028cc52f4fe7c7f634dd30b69581839fed97386d28b10 (receipt status 0x1)
