@@ -49,7 +49,8 @@
     "copilot_pat_available": false
   },
   "checkpoints_answered": {
-    "manifest": true
+    "manifest": true,
+    "idea_selection": true
   },
   "confirmed_urls": {},
   "pipeline": {
@@ -61,11 +62,14 @@
         "verdict": "pass"
       },
       "warroom": {
-        "status": "running",
-        "dispatched_at": "2026-09-08T21:49:43Z"
+        "status": "complete",
+        "dispatched_at": "2026-09-08T21:49:43Z",
+        "completed_at": "2026-09-08T22:51:53Z",
+        "verdict": "pass"
       },
       "forge": {
-        "status": "pending"
+        "status": "running",
+        "dispatched_at": "2026-09-08T22:52:01Z"
       },
       "critique": {
         "status": "pending"
@@ -124,5 +128,16 @@
   "intelState": {
     "status": "complete",
     "sourceCount": 41
+  },
+  "warroomState": {
+    "status": "complete",
+    "winner": "Winnow (TRIAGE)",
+    "winner_score": 8.23,
+    "backup": "REMATCH",
+    "backup_score": 6.68,
+    "ideas_proposed": 30,
+    "ideas_killed": 9,
+    "thesis_present": true,
+    "selectedIdea": "Winnow"
   }
 }

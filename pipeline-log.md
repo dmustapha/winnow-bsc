@@ -9,3 +9,8 @@
 2026-09-08T21:49:43Z | warroom | START | warroom | Dispatching warroom
 2026-09-08T22:51:07Z | warroom | COMPLETE | phase_5 | Winner: Winnow (TRIAGE) 8.23 unanimous; 30 ideas, 2 vetoes, thesis locked
 2026-09-08T22:51:41Z | warroom | COMPLETE | warroom | gate=pass verdict=pass
+2026-09-08T22:52:01Z | forge | START | forge | Dispatching forge
+2026-09-08T23:04:46Z | hackathon-forge | COMPLETE | phase_4 | PRD/ARCH/PLAN/INVARIANTS + manifest lint PASS; probe-proven registry round trip
+2026-09-09T03:16:34Z | forge | START | forge | Dispatching forge
+2026-09-09T03:18:26Z | forge | START | forge | Dispatching forge
+2026-09-09T03:24:01Z | forge | COMPLETE | forge | gate=pass verdict=pass

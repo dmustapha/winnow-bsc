@@ -84,3 +84,51 @@
 
 #### For Next Skill
 - forge: read WINNER-BRIEF.md (Thesis + Non-Negotiables + Out-of-Scope are binding). Architecture must include: 8004scan paginated indexer + cache; probe engine (HTTP liveness vs published MCP/A2A endpoints) with background queue honoring 30 req/min; Sybil-cluster scoring offchain (method note published, no onchain accusations); ERC-8004 giveFeedback attestation writer (testnet first, mainnet runbook); Altana session grant/monitor/revoke UI (@altananetwork/sdk v0.9.0 pinned); 4 reference agents from Altana skills (PCS Liquidity=rebalancing, PCS Trading=grid, Venus=health-factor, Lista/Venus=yield); TermiX report generator from our agents' both-ways runs; Fly.io/paid host. PLAN THE AGENT ADVANTAGE REPORT FROM DAY ONE. ~11h to deadline: cut list is law.
+
+### forge — 2026-09-09T02:05Z
+
+#### Done
+- Emergency-mode forge complete: winnow/PRD.md (compressed, all sections), winnow/ARCHITECTURE.md (881 lines, complete code for all core files, 24 sections incl. Integration Map), winnow/PLAN.md (7 phases C0-C6, gates, DT-1..DT-7), winnow/INVARIANTS.md (6 non-negotiables w/ judge-attack pairs, structural headline enforcement, 12 source-lock rows), .env.example + .input-manifest.json (lint PASS), FEATURE-OBSERVABLES.md (F-001..F-006).
+
+#### Additions
+- [NEW] Day-0 platform probe PROVEN on BSC testnet: register() → agentId 2287 (tx 0x9c127594fce179e231b52a97fdc170969138ae890df92a682bd7106be4157195); giveFeedback → tx 0xd40ae6873aa4ff58aa6efac1878374c130c5c23f5168ad6b54d50582435fbded; tokenURI read-back exact; **GOTCHA: getSummary REVERTS on empty clientAddresses**.
+- [NEW] Stack locked: Next.js 14 + better-sqlite3 + viem + @altananetwork/sdk@0.9.0 on Fly.io (auto_stop=false for Sep 9-23), worker loops via instrumentation hook.
+
+#### Deviations
+- [SKILL] scope_mode=emergency (<1 build day): [MOCK-x402-SELL] cut-first; seed-agents/agent-advantage/mainnet-runbook are labeled spec-stubs for build to implement; boilerplate (tsconfig/globals.css) via create-next-app.
+- [AUTO] Amplifier peer_perspective degraded rc=1 (Codex unreachable headless) — advisory, recorded, continued.
+
+#### Verified Facts
+- Registry round trip works from our wallet (txs above). All mainnet integration addresses code-checked (SOURCE LOCK table).
+
+#### Assumptions
+- [ASSUMED→DT-5] Altana grantSession session-key param naming — build checks SDK d.ts first; fallback DT-5b degrades to app-enforced caps w/ honest banner (Altana bounty at risk only in that branch).
+- [ASSUMED→DT-7] VenusLens ABI shape + venus API fields — Aave getUserAccountData is the verified fallback.
+
+#### Blockers for Downstream
+- None hard. Mainnet funding remains Downstream D-1 (morning; DT-2 says submit as-is at 10:30 UTC if unfunded).
+
+#### Key Decisions
+- D-1..D-12 in INVARIANTS.md RESOLVED DECISIONS (host=Fly, DB=SQLite, testnet-first w/ mainnet runbook, server-held demo-operator custody w/ keys-off-host judge path).
+
+#### For Next Skill
+- critique: attack PRD/ARCHITECTURE/PLAN cold — key surfaces: DT-5 Altana param risk, index-completeness optics, TermiX report manual-leg integrity, 14-day worker durability, category-tagging heuristic honesty.
+- build: PLAN.md is law; INVARIANTS.md is law; C0 franchise skeleton first; spike Altana hire path FIRST in C3 (30m box); npm --fetch-retries=5 everywhere; commit per task.
+
+## Cross-Review
+
+```json
+{"reviewer":"claude","phase":"thesis-2","verdict":"DISAGREE","findings":[{"claim_id":"thesis-2","question":"Does the demo script witness the thesis DEMO OBLIGATION and does the primary flow equal the HERO FLOW? Answer PASS or FAIL only.","lead_answer":"PASS","reviewer_answer":"FAIL","reviewer_reasoning":"ARCHITECTURE.md contains no demo script section at all — the closest artifacts are the hero-flow UI (landing → category → agent detail with re-probe/activate/revoke) and §21's 'P1 demo deliverable (index+grades+hero flow)'. Checked against the WINNER-BRIEF DEMO OBLIGATION (warroom/WINNER-BRIEF.md:35): (a) live re-probe with visible rank update is covered (api/reprobe + 'Re-probe now' button updating the stored grade); (b) onchain liveness attestation tx is covered (attestor.ts giveFeedback with tx links in UI/proof page); but (c) is NOT witnessed: the obligation requires a 1-click ONCHAIN revoke and an over-cap attempt visibly reverting, yet the architecture's revoke() (src/lib/altana.ts) only sets the DB row to status='revoked' with revoke_tx='pending' — the actual onchain revocation path is explicitly [UNVERIFIED] (DT-5 fallback), and no component, route, script, or demo step anywhere in the file stages or demonstrates an over-cap spend attempt reverting. The primary flow does substantially equal the HERO FLOW (Land → category tiles → graded compare via AgentCard/GradeBadge → Activate with 0.005 BNB cap → Recent actions from real mainnet DeFi reads → 'Fire (revoke)' button), but since the demo-obligation half of the conjunctive claim fails — no demo script exists and obligation (c) is unwitnessed — the overall answer is FAIL.","match":false,"resolution_note":"Resolve the claim from canonical inputs before acceptance."}],"resolved":false}
+```
+
+## Cross-Review
+
+```json
+{"reviewer":"claude","phase":"thesis-2","verdict":"AGREE","findings":[{"claim_id":"thesis-2","question":"Does the demo script witness the thesis DEMO OBLIGATION and does the primary flow equal the HERO FLOW? Answer PASS or FAIL only.","lead_answer":"PASS","reviewer_answer":"PASS","reviewer_reasoning":"The PRD's Demo Script (winnow/PRD.md §6) witnesses all three parts of the thesis DEMO OBLIGATION from warroom/WINNER-BRIEF.md:35: (a) 0:50–1:20 shows 'Re-probe now' running a live probe with the grade timestamp updating (grade recomputed live); (b) 1:20–1:50 shows the attestation tx on BscScan plus a third-party 8004 reader (liveness attestation tx landing onchain); (c) 1:50–2:30 shows activation with a $10/day spend cap and a real DeFi action through the Altana session (c1), and 2:30–3:00 shows the 1-click revocation tx killing the Keystore key and an over-cap attempt reverting (c2). Each scene is explicitly tagged with its obligation letter. The PRD's primary flow (User Flow 1, marked 'HERO FLOW = flow 1' and 'Hire (hero)' at winnow/PRD.md:35-36) equals the brief's HERO FLOW at WINNER-BRIEF.md:36 step-for-step: Land → pick category → ranked graded list (compare graded agents) → open agent with vitals/liveness/onchain history (live vitals + onchain track record) → Activate with cap $/day (activate with a spend cap) → agent visibly working with its txs streaming (watch it act on real DeFi state) → Revoke in 1 tx (revoke in one click). ARCHITECTURE.md corroborates: real onchain revocation and over-cap revert are implemented for obligations c1/c2 (lines 392, 400) and the hero flow is the P1 demo deliverable (line 882).","match":true,"resolution_note":"Weak-positive convergence; not proof."}],"resolved":false}
+```
+
+## Cross-Review
+
+```json
+{"reviewer":"claude","phase":"thesis-2","verdict":"AGREE","findings":[{"claim_id":"thesis-2","question":"Does the demo script witness the thesis DEMO OBLIGATION and does the primary flow equal the HERO FLOW? Answer PASS or FAIL only.","lead_answer":"PASS","reviewer_answer":"PASS","reviewer_reasoning":"The thesis DEMO OBLIGATION in warroom/WINNER-BRIEF.md:35 requires the judge to witness (a) a live grade recompute via re-probe with visible rank/grade update, (b) a liveness attestation tx landing onchain, and (c) a hire through a spend-capped Altana session with 1-click onchain revoke plus an over-cap attempt reverting. The demo script in winnow/PRD.md §6 explicitly satisfies all of these: 0:50–1:20 'Re-probe now → live transcript streams → grade timestamp updates' is tagged (obligation a); 1:20–1:50 'attestation → BscScan tx in view; third-party 8004 reader shows the same feedback' is tagged (obligation b); 1:50–2:30 'set $10/day cap, 24h expiry → session grant tx → agent executes a real DeFi action' is tagged (obligation c1); 2:30–3:00 'one click → revocation tx → Keystore key dead; over-cap attempt shown reverting' is tagged (obligation c2). The HERO FLOW in WINNER-BRIEF.md:36 (Land → pick category → compare graded agents with live vitals + onchain track record → activate with spend cap → watch it act on real DeFi state → revoke in one click) equals PRD.md §3 flow 1, marked 'HERO FLOW = flow 1' and 'Hire (hero)': Land → pick category → ranked graded list → open agent (vitals: liveness, grade breakdown, evidence links, onchain history) → Activate (cap $/day + expiry, session granted onchain) → agent visible working (txs stream) → Revoke (1 tx). Each stage corresponds one-to-one, and ARCHITECTURE.md is consistent (hero flow as P1 demo deliverable, over-cap revert and real onchain revocation implementing obligations c1/c2). Both conditions hold.","match":true,"resolution_note":"Weak-positive convergence; not proof."}],"resolved":false}
+```
