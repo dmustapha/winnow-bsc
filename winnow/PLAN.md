@@ -28,7 +28,7 @@ Total ≈ 7h coding — leaves buffer for pipeline QA phases before noon.
 Run first page, log keys. ✅ `next_cursor` present → as coded. 🔀 different field (`cursor`,`page_token`) → adjust kvSet key. 🔀 429s → raise pace to 3s. ⛔ API down → fallback: enumerate via 8004scan /agents/leaderboard+/latest (small) + mark index degraded (honest banner); detail via tokenURI reads onchain.
 
 ## C2 — Probe + grade + attestor (ARCH §7–9)
-- T2.1 probe.ts + grade.ts. Test: grade a known-live agent (OpenOdds 56/49637 — mcp verified in forge) → expect liveness>0; grade a shell → 0. Commit: `feat: probe engine + grades (FK invariant)`.
+- T2.1 probe.ts + grade.ts. Test: grade a known-live agent (OpenOdds 56/49637 — mcp verified in forge) → expect liveness>0; grade a shell → 0. **[CRITIQUE E-2] probe.ts uses the budget-decoupled refresh (scan call ONLY for unindexed rows — per updated ARCH §7); verify a re-probe of an indexed agent makes zero 8004scan calls (kv scan_budget unchanged).** Commit: `feat: probe engine + grades (FK invariant)`.
 - T2.2 attestor.ts on TESTNET. Attest a testnet agent (e.g. our probe agent 2287's neighbor) → tx status 1 (pattern proven: 0xd40ae6…). Commit: `feat: guarded positive attestor`.
 - T2.3 npm run verify (verify-claims) → orphanGrades=0, negativeAttestations=0. Commit: `test: invariant verifier green`.
 - **GATE C2:** [ ] live agent grades >55 [ ] shell grades F w/ transcript [ ] attestation tx on testnet BscScan [ ] verifier green.
@@ -38,9 +38,9 @@ Run first page, log keys. ✅ `next_cursor` present → as coded. 🔀 different
 
 ## C3 — Sessions + reference agents (ARCH §10–12)
 - T3.1 altana.ts. **Spike hire path FIRST (30m budget)**: grantSession on testnet with real relay; **DT-5 check `signerKey` param naming vs SDK d.ts**. Commit: `feat: altana session layer`.
-- T3.2 strategies.ts + worker.ts + instrumentation.ts. **DT-7: resolve WATCH_ADDR (live Aave BSC borrower via bscscan), PCS_POOL (factory getPool(WBNB,USDT,500)), venus API field names**. Run worker 5 min → agent_actions rows w/ real reasoning. Commit: `feat: 4 reference agents + worker loops`.
+- T3.2 strategies.ts + worker.ts + instrumentation.ts. **DT-7: resolve WATCH_ADDR (live Aave BSC borrower via bscscan), PCS_POOL (factory getPool(WBNB,USDT,500)), venus API field names**. **[CRITIQUE E-2] worker includes the fastgrader lane (ARCH §12): endpoint-less agents batch-graded 25/30s at zero network cost — verify probed counter grows by 100+ during the 5-min worker run.** Run worker 5 min → agent_actions rows w/ real reasoning. Commit: `feat: 4 reference agents + worker loops`.
 - T3.3 scripts/seed-agents.ts: register 4 agents on TESTNET registry (register(dataURI) pattern proven tx 0x9c1275…), write kv reference_agents, set agents.category+is_reference for them AND categorize ~30 real indexed agents by description keyword match (honest heuristic, labeled). Commit: `feat: seed reference agents`.
-- **GATE C3:** [ ] session visible via Keystore isValidKey / testnet.altana.network [ ] 4 agents registered w/ ERC-8004 ids [ ] actions w/ Claude reasoning in DB [ ] each category has ≥1 reference agent.
+- **GATE C3:** [ ] session visible via Keystore isValidKey / testnet.altana.network [ ] **[CRITIQUE E-4] kv `session_handle_{id}` row exists immediately after activateAgent (revoke + overcap depend on it — persisted inside activateAgent per updated ARCH §10, not as a separate step)** [ ] 4 agents registered w/ ERC-8004 ids [ ] actions w/ Claude reasoning in DB [ ] each category has ≥1 reference agent.
 #### DT-5 (Altana SDK/session issues)
 ✅ grantSession works → proceed. 🔀 param shape differs → read node_modules/@altananetwork/sdk/dist/*.d.ts, adjust. 🔀 relay down/faucet dry → retry 3×; then DT-5b: sessions DEGRADE to direct agent-wallet ops w/ app-enforced caps + UI banner "session enforcement degraded (relay outage)" — Altana bounty then at risk, note in PULSE, keep main track intact. ⛔ SDK broken entirely → same DT-5b + attempt raw Keystore contract calls for grant (docs concepts/keystore) in stress phase if time.
 #### DT-7 (DeFi data quirks)
@@ -48,13 +48,13 @@ Run first page, log keys. ✅ `next_cursor` present → as coded. 🔀 different
 
 ## C4 — UI (ARCH §13–14) [may run parallel with C3]
 - T4.1 API routes (§13) — all 7. Commit: `feat: api routes`.
-- T4.2 Pages+components (§14). Commit: `feat: ui hero flow`.
+- T4.2 Pages+components (§14). **[CRITIQUE E-1] copy law: landing h1/metadata/demo say "we're grading every one" + live probed counter — NEVER "we grade all of them" (MUST-NOT-CLAIM); grep the built UI for "grade all" → 0 hits.** Commit: `feat: ui hero flow`.
 - **GATE C4:** [ ] land→category→detail→re-probe works locally cold [ ] counters real [ ] no dead ends (F-grade page renders explanation).
 
 ## C5 — Scripts + report (ARCH §15)
 - T5.1 proof.ts + verify-claims green. Commit: `feat: proof generation`.
 - T5.2 agent-advantage.ts + RUN IT: 3 tasks both ways (manual legs executed by hand, wall-clocked, outputs pasted). Writes submission/AGENT-ADVANTAGE-REPORT.md. Commit: `feat: TermiX agent advantage report (real runs)`.
-- **GATE C5:** [ ] report has 3 tasks × both legs × time/cost/quality + outputs [ ] ≥1 trading/security task [ ] zero simulated timings.
+- **GATE C5:** [ ] report has 3 tasks × both legs × time/cost/quality + outputs [ ] ≥1 trading/security task [ ] zero simulated timings [ ] **[CRITIQUE E-3] each task has a "Price + speed vs alternative" line w/ receipts; Task A states evaluation window + decision-quality-vs-spot (labeled calibration) + risk statement (TermiX trading trio, per PRD 7.8)**.
 
 ## C6 — Deploy (ARCH §16, §22)
 - T6.1 Dockerfile+fly.toml; `fly launch --no-deploy && fly volumes create winnow_data --size 1 && fly secrets set … && fly deploy`. 

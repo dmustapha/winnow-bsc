@@ -48,7 +48,7 @@ Deferred/mocked (labeled through all docs): [MOCK-x402-SELL] paid grade API (cut
 - **Anthropic API** (agent reasoning text) — claude-haiku; AltLLM optional fallback.
 
 ## 6. Demo Script (3:00) — satisfies DEMO OBLIGATION (a)(b)(c)
-- 0:00–0:20 [Land] Hero: "310,215 agents. ~4% alive. We grade all of them." Live counters. VO: direct, no buzzwords.
+- 0:00–0:20 [Land] Hero: "310,215 agents. ~4% alive. We're grading every one." Live counters (probed count visible). VO: direct, no buzzwords. <!-- [CRITIQUE E-1] present-progressive; never "we grade all of them" (MUST-NOT-CLAIM) -->
 - 0:20–0:50 [Category → list] Health Factor Monitoring tile → graded list; a shell agent sits at F with evidence link.
 - 0:50–1:20 [Recompute] Click A-grade agent → "Re-probe now" → live transcript streams → grade timestamp updates. **(obligation a)**
 - 1:20–1:50 [Onchain] Click its attestation → BscScan tx in view; third-party 8004 reader shows the same feedback. **(obligation b)**
@@ -105,6 +105,7 @@ Checks (each timed, 6s timeout):
 - endpoints_declared: absence of both = the 96% case; scored 0 liveness with explicit verdict text.
 Scoring (D-5): liveness 0/32/40 (dead / one endpoint live / both live), meta 0-15 (name+desc+image+x402), feedback 0-30 (validity heuristic — see method note), track 0-15 (recorded actions + attestations).
 Every probe writes probe_logs row BEFORE grade upsert (INVARIANT 1 ordering).
+<!-- [CRITIQUE E-2] Budget decoupling + shell fast-grade lane --> Probe throughput is DECOUPLED from the 8004scan 900/day budget: probes of indexed rows use stored endpoint data (no scan refresh); scan refresh only for unindexed rows. A second worker lane fast-grades endpoint-less agents (zero network cost per grade) in batches of 25/30s — honest graded coverage grows by thousands/day instead of every shell showing "not yet probed". This also keeps AC-2's ≤15s probe bound true (checks are ≤2×6s without the paced scan call).
 
 ## 4.3 feedback-validity method note (published in UI footer + DOMAIN-GUIDE)
 Signal basis: arXiv 2606.26028 findings (59.2% coordinated reviewers on BSC).
@@ -147,7 +148,7 @@ Each: own wallet (kv-persisted), ERC-8004 registration (testnet tonight, mainnet
 | /api/revoke | no session | 500 | {error:"no session"} |
 
 ## 6.1 Demo voiceover (full text, banned-pattern-checked: no em dashes, active voice)
-S1 (0:00): "BSC has three hundred ten thousand registered AI agents. Four percent are alive. Winnow grades every one of them."
+S1 (0:00): "BSC has three hundred ten thousand registered AI agents. Four percent are alive. Winnow is grading every one of them, live. Watch the counter climb." <!-- [CRITIQUE E-1] honest progressive claim backed by visible probed counter -->
 S2 (0:20): "Pick a job. Health factor monitoring. Every agent here carries a grade computed from live probes, not star ratings. This one failed its probe. Here is the evidence."
 S3 (0:50): "Don't trust the grade? Re-run it. That button fires a real probe at the agent's endpoint right now. Watch the score update."
 S4 (1:20): "Verified liveness gets written back to the canonical registry. Here is the transaction, and here is the same attestation in a third-party explorer. Winnow leaves the registry better than it found it."
@@ -294,6 +295,9 @@ Code freeze at 11:30 UTC (T-30m). Any post-freeze change requires: reproducible 
 - Manual leg: builder reads api.venus.io JSON manually, sorts, decides.
 ## Report format (submission/AGENT-ADVANTAGE-REPORT.md)
 | Task | Leg | Time | Cost | Quality (rubric) | Output (verbatim, attached) |
+<!-- [CRITIQUE E-3] TermiX rubric alignment: criteria are Value 30% (price+speed beat alternative) / Proven advantage 30% / High-stakes+track record 20% -->
+Per task, add an explicit **"Price + speed vs alternative"** line: agent-leg cost (LLM tokens + gas, USD) and wall-clock vs manual-leg operator time valued honestly — state the multiple plainly (e.g. "agent 28s/$0.004 vs manual 11m40s"). No AgentEra-style unbounded multipliers: every number carries its receipt.
+Task A (trading) additionally reports the TermiX trading-agent trio honestly: **evaluation window** ("single-session calibration, N decision cycles on {date}"), **decision-quality assessment against realized spot after the window** (labeled calibration, never extrapolated to a win rate we did not measure), and an explicit **risk statement** in the agent output. Absent long-window data is stated as absent — the honest-window framing IS the differentiator vs competitors' 600x claims.
 Honest labeling: "calibration runs executed by the operator on {date}; agent legs via the deployed marketplace; manual legs performed by hand and wall-clocked; receipts inline." TermiX's own re-test is expected — the marketplace they hire from is the live URL.
 
 # DATA RETENTION + JUDGING-WINDOW OPERATIONS

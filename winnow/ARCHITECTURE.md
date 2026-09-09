@@ -258,7 +258,9 @@ async function timed(name: string, fn: () => Promise<string>): Promise<Check> {
 }
 export async function runProbe(chainId: number, tokenId: number) {
   const row = db.prepare("SELECT * FROM agents WHERE chain_id=? AND token_id=?").get(chainId, tokenId) as any;
-  const detail = await agentDetail(chainId, tokenId); // refresh + endpoint truth
+  // [CRITIQUE E-2] scan refresh ONLY for unindexed rows — every probe used to burn one 8004scan call,
+  // coupling probe throughput (4,320/day at 1/20s) to the 900/day scan budget. Indexed rows probe from stored endpoints (also holds AC-2 ≤15s: checks are ≤2×6s).
+  const detail = row ? null : await agentDetail(chainId, tokenId);
   if (detail) require("./scan8004").upsertAgent(detail);
   const a = db.prepare("SELECT * FROM agents WHERE chain_id=? AND token_id=?").get(chainId, tokenId) as any;
   const checks: Check[] = [];
@@ -379,9 +381,12 @@ export async function activateAgent(agentName: string, refTokenId: number, capWe
     permissions: { calls: allowTo ? [{ to: allowTo }] : [], spend: [{ limit: capWei, period: "day" }] },
     expiry: Math.floor(Date.now() / 1000) + expiryS,
   });
-  db.prepare("INSERT INTO sessions(agent_chain,agent_token,agent_wallet,session_key,cap_wei,expiry,grant_tx,status) VALUES(?,?,?,?,?,?,?,'live')")
+  // [CRITIQUE E-4] persist rowId + session handle ATOMICALLY at grant — revoke() and demonstrateOverCap() read kv session_handle_{id}; without this line both throw and demo obligation (c2) fails
+  const info = db.prepare("INSERT INTO sessions(agent_chain,agent_token,agent_wallet,session_key,cap_wei,expiry,grant_tx,status) VALUES(?,?,?,?,?,?,?,'live')")
     .run(NET === BNB ? 56 : 97, refTokenId, wallet.address, aw.address, capWei.toString(), Math.floor(Date.now()/1000)+expiryS, (session as any)?.txHash ?? "onchain");
-  return { wallet, session, agentWallet: aw };
+  const sessionId = Number(info.lastInsertRowid);
+  db.prepare("INSERT INTO kv(k,v) VALUES(?,?) ON CONFLICT(k) DO UPDATE SET v=excluded.v").run(`session_handle_${sessionId}`, JSON.stringify({ wallet, session }));
+  return { wallet, session, agentWallet: aw, sessionId };
 }
 export async function revoke(sessionRowId: number) {
   const row = db.prepare("SELECT * FROM sessions WHERE id=?").get(sessionRowId) as any;
@@ -395,8 +400,7 @@ export async function revoke(sessionRowId: number) {
   db.prepare("UPDATE sessions SET status='revoked', revoke_tx=? WHERE id=?").run(tx, sessionRowId);
   return tx;
 }
-// NOTE: activateAgent MUST persist the handle at grant time:
-//   db.prepare("INSERT INTO kv(k,v) VALUES(?,?)").run(`session_handle_${rowId}`, JSON.stringify({ wallet, session }))
+// [CRITIQUE E-4] handle persistence now lives INSIDE activateAgent above (was a detached note — copy-verbatim builds shipped a broken revoke)
 // Over-cap revert demo — demo obligation (c2): attempt an execute EXCEEDING the session spend cap;
 // Keystore validation reverts; we capture + surface the revert as proof.
 export async function demonstrateOverCap(sessionRowId: number) {
@@ -485,6 +489,14 @@ export function startWorker() {
     const next = db.prepare(`SELECT a.chain_id, a.token_id FROM agents a LEFT JOIN grades g ON g.chain_id=a.chain_id AND g.token_id=a.token_id
       WHERE a.mcp_server IS NOT NULL AND g.token_id IS NULL LIMIT 1`).get() as any;
     if (next) await gradeAgent(next.chain_id, next.token_id);
+  });
+  // [CRITIQUE E-2] fast-grade lane: endpoint-less agents (the 96%) cost ZERO network to grade
+  // (no-endpoint check + feedback heuristic + meta only). Grows honest graded coverage by thousands/day
+  // instead of leaving every shell "not yet probed" — directly feeds the Data Quality criterion.
+  loop("fastgrader", 30000, async () => {
+    const batch = db.prepare(`SELECT a.chain_id, a.token_id FROM agents a LEFT JOIN grades g ON g.chain_id=a.chain_id AND g.token_id=a.token_id
+      WHERE a.mcp_server IS NULL AND a.a2a_endpoint IS NULL AND g.token_id IS NULL LIMIT 25`).all() as any[];
+    for (const r of batch) await gradeAgent(r.chain_id, r.token_id);
   });
   loop("agents", 120000, async () => {
     for (const ra of REF()) {
@@ -621,7 +633,7 @@ export function GET() { return NextResponse.json({ items: db.prepare("SELECT * F
 ```tsx
 // File: src/app/layout.tsx
 import "./globals.css";
-export const metadata = { title: "Winnow — the trust-graded agent marketplace for BSC", description: "310,215 agents. ~4% alive. We grade all of them." };
+export const metadata = { title: "Winnow — the trust-graded agent marketplace for BSC", description: "The trust-graded agent marketplace for BSC. Live probes, recomputable grades, spend-capped hiring." }; // [CRITIQUE E-1] no hardcoded count, no full-corpus grading claim
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (<html lang="en"><body className="bg-zinc-950 text-zinc-100 min-h-screen">
     <nav className="border-b border-zinc-800 px-6 py-3 flex gap-6 items-center">
@@ -642,7 +654,8 @@ const CATS = [["rebalancing","Rebalancing","Manages LP ranges, resets positions"
 export default async function Home() {
   const s = await stats();
   return (<main className="max-w-5xl mx-auto px-6 py-12">
-    <h1 className="text-4xl font-bold">{Number(s.indexed).toLocaleString()} agents. Most are shells.<br/>We grade all of them.</h1>
+    {/* [CRITIQUE E-1] present-progressive + live probed counter = honest (MUST-NOT-CLAIM: never imply full corpus graded) */}
+    <h1 className="text-4xl font-bold">{Number(s.indexed).toLocaleString()} agents. Most are shells.<br/>We&apos;re grading every one. {Number(s.probed).toLocaleString()} so far.</h1>
     <p className="mt-3 text-zinc-400 max-w-2xl">Every grade is recomputed from live probes and onchain data. Hire any agent inside a spend-capped session you can revoke in one click.</p>
     <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
       {[["Indexed",s.indexed],["Declared endpoints",s.withEndpoints],["Probed",s.probed],["Verified live",s.verifiedLive]].map(([l,v])=>(

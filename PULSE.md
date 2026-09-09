@@ -12,6 +12,7 @@
 <!-- Owner-routed, non-blocking deferred work. Every skill reads on entry, actions rows it owns. See PULSE-PROTOCOL § Downstream Items. -->
 | ID | Raised by | Owner phase | Pri | Item | Acceptance | Status |
 |----|-----------|-------------|:---:|------|-----------|:------:|
+| D-2 | forge | package | MED | PRD.md has 37 em-dash/voice-pattern hits (internal doc) — ensure ZERO banned patterns in user-facing copy (README, submission description, demo VO) per Dami no-em-dash rule | grep -c em-dash on shipped copy = 0 | open |
 | D-1 | warroom | deploy | HIGH | Fund 0xc211C942946011859ca634F22400d80570ED12A5 with ~0.01 BNB on BSC mainnet (Dami, morning) then run mainnet attestation+session runbook | mainnet txs visible on BscScan + Altana explorer | open |
 
 ## Skill Sections
@@ -115,6 +116,36 @@
 - critique: attack PRD/ARCHITECTURE/PLAN cold — key surfaces: DT-5 Altana param risk, index-completeness optics, TermiX report manual-leg integrity, 14-day worker durability, category-tagging heuristic honesty.
 - build: PLAN.md is law; INVARIANTS.md is law; C0 franchise skeleton first; spike Altana hire path FIRST in C3 (30m box); npm --fetch-retries=5 everywhere; commit per task.
 
+### critique — 2026-09-09T03:45Z
+
+#### Done
+- Full critique in autonomous emergency mode (~8.5h to deadline, 4–12h adaptation). Verdict **PROCEED**. Positioning: differentiated (saturated 20+ field; concrete demo-witnessable differentiator on the Data Quality criterion). Narrative: compelling. All 6 win-legibility axes strong. CRITIQUE-REPORT.md + .critique-state.json written; PRD/ARCHITECTURE/PLAN updated (winnow/ + root copies synced).
+
+#### Additions
+- [NEW] ARCH bug found+fixed: activateAgent never persisted kv session_handle_{id} (lived in a detached comment) — revoke() and demonstrateOverCap() (demo obligation c2) would throw on a copy-verbatim build. Now atomic inside activateAgent + GATE C3 check (E-4).
+- [NEW] Probe engine burned one 8004scan call per probe → probe throughput silently coupled to the 900/day scan budget; 96% endpoint-less agents were never worker-graded. Fixed: refresh only for unindexed rows + new fastgrader worker lane (zero-network shell grading, 25/30s) (E-2).
+
+#### Deviations
+- [AUTO] Phase 2 peer cross-review degraded: crossmodel helper invocation failed on macOS (`timeout` not found) — advisory, recorded, continued.
+- [AUTO] Copilot/Grid enrichment skipped (no PAT; Solana-centric corpus) — roster audit substituted, same as intel.
+- [SKILL] Narrative phase compressed per 4–12h time adaptation (onboarding friction tests still run: 10s/30s/60s all PASS).
+
+#### Verified Facts
+- Drift scan: "We grade all of them" (landing/metadata/demo VO) violated our own MUST-NOT-CLAIM row 1 → E-1 applied (present-progressive + live probed counter). AC-2 ≤15s was numerically false pre-E-2 (worst case ~29s), true post-E-2 (≤12s).
+
+#### Assumptions
+- [ASSUMED] Testnet-first reference agents acceptable at submit-as-is cut (10:30 UTC) — acknowledged drift with honest chain labels; mainnet funding remains the top attackable surface vs SmartSentinels' mainnet fleet.
+
+#### Blockers for Downstream
+- None hard. D-1 mainnet funding urgency RAISED: treat as P0 eligibility hedge when Dami wakes (existing Downstream row stands).
+
+#### Key Decisions
+- [SKILL][AUTO] Approved E-1 (honest copy), E-2 (budget decoupling + fastgrader lane), E-3 (TermiX rubric fields: price+speed-vs-alternative line; trading window/quality/risk trio), E-4 (session-handle persistence) — all quick/none, applied to PRD+ARCH+PLAN with [CRITIQUE E-N] tags. [AUTO] Deferred E-5 (ERC-8183 hire path, medium effort) — build ONLY if C5 finishes early. No thesis amendment required (E-1/E-2 compatible; fastgrader makes "grades the whole registry" converge to true).
+
+#### For Next Skill
+- build: PLAN.md updated in place — new gate items: T2.1 zero-scan-call re-probe check, T3.2 fastgrader lane (+100 probed during 5-min run), GATE C3 kv session_handle_{id} exists post-activation, T4.2 grep "grade all" = 0, GATE C5 TermiX rubric fields. ARCH §7/§10/§12/§14 changed — copy the UPDATED code. E-5 is the only sanctioned stretch item.
+- verify_milestone: recheck drift item "testnet-first vs LIVE on BSC" after DT-2 runs (or doesn't).
+
 ## Cross-Review
 
 ```json
@@ -131,4 +162,10 @@
 
 ```json
 {"reviewer":"claude","phase":"thesis-2","verdict":"AGREE","findings":[{"claim_id":"thesis-2","question":"Does the demo script witness the thesis DEMO OBLIGATION and does the primary flow equal the HERO FLOW? Answer PASS or FAIL only.","lead_answer":"PASS","reviewer_answer":"PASS","reviewer_reasoning":"The thesis DEMO OBLIGATION in warroom/WINNER-BRIEF.md:35 requires the judge to witness (a) a live grade recompute via re-probe with visible rank/grade update, (b) a liveness attestation tx landing onchain, and (c) a hire through a spend-capped Altana session with 1-click onchain revoke plus an over-cap attempt reverting. The demo script in winnow/PRD.md §6 explicitly satisfies all of these: 0:50–1:20 'Re-probe now → live transcript streams → grade timestamp updates' is tagged (obligation a); 1:20–1:50 'attestation → BscScan tx in view; third-party 8004 reader shows the same feedback' is tagged (obligation b); 1:50–2:30 'set $10/day cap, 24h expiry → session grant tx → agent executes a real DeFi action' is tagged (obligation c1); 2:30–3:00 'one click → revocation tx → Keystore key dead; over-cap attempt shown reverting' is tagged (obligation c2). The HERO FLOW in WINNER-BRIEF.md:36 (Land → pick category → compare graded agents with live vitals + onchain track record → activate with spend cap → watch it act on real DeFi state → revoke in one click) equals PRD.md §3 flow 1, marked 'HERO FLOW = flow 1' and 'Hire (hero)': Land → pick category → ranked graded list → open agent (vitals: liveness, grade breakdown, evidence links, onchain history) → Activate (cap $/day + expiry, session granted onchain) → agent visible working (txs stream) → Revoke (1 tx). Each stage corresponds one-to-one, and ARCHITECTURE.md is consistent (hero flow as P1 demo deliverable, over-cap revert and real onchain revocation implementing obligations c1/c2). Both conditions hold.","match":true,"resolution_note":"Weak-positive convergence; not proof."}],"resolved":false}
+```
+
+## Cross-Review
+
+```json
+{"reviewer":"claude","phase":"positioning","verdict":"AGREE","findings":[{"claim_id":"positioning","question":"Is Winnow meaningfully differentiated from the documented competitor field (Marque, KaizenScope, AgentEra, SmartSentinels, 8004scan/RNWY incumbents) on the judged axes? Answer PASS or FAIL only.","lead_answer":"PASS","reviewer_answer":"PASS","reviewer_reasoning":"The three canonical documents establish meaningful differentiation on the judged axes. The research brief (research/research-brief.md) documents each competitor's strengths precisely — Marque (conformance tests, spend-capped 'charters', mainnet PCS receipts), KaizenScope (verification-gated payment, 66 agents probed), AgentEra (full bounty stack, TermiX report with 40.6x/163x/604x claims), SmartSentinels (mainnet agents in all 4 categories), and incumbents 8004scan/RNWY (registry explorers with static scores) — and identifies the whitespace: nobody owns data quality at scale (Sybil-filtered reputation + verified endpoints + receipts), which is explicitly a named judging criterion. Winnow's PRD competitive table shows capabilities absent from both incumbents: live re-probe at view time, recomputable evidence per number (probe transcript FK + verify script), onchain write-back via giveFeedback attestations, and in-product Keystore-enforced capped hiring with 1-click revoke. Against the hackathon field, no single competitor combines these: KaizenScope probes but doesn't recompute or write back; Marque's charters are bespoke vs Winnow's canonical-Keystore-enforced sessions with a live over-cap-revert demo; AgentEra's unbounded multiplier claims are countered by Winnow's honest-window framing; SmartSentinels' mainnet edge is a documented gap (testnet-first writes) but is honestly labeled with a funding runbook, and is a deployment posture rather than an axis-level capability gap. The critique report's own adversarial pass — overlap zones, drift scan, roster audit of 20+ repos — reaches 'differentiated' (not 'unique') with the differentiator concrete, demo-witnessable ('re-verify this number in front of me'), and mapped 1:1 to the published judging criteria. The differentiation is substantiated per-competitor rather than asserted, so the claim holds.","match":true,"resolution_note":"Weak-positive convergence; not proof."}],"resolved":false}
 ```
