@@ -5,6 +5,7 @@ import assert from "node:assert";
 async function main() {
   let letterFor: (s: number) => string;
   try {
+    // @ts-ignore — module lands in phase C2; test self-skips until then
     ({ letterFor } = await import("../../src/lib/grade"));
   } catch {
     console.log("SKIP grade-formula.test: src/lib/grade.ts not built yet (lands in phase C2)");
