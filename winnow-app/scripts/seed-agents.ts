@@ -4,7 +4,7 @@
 // writes kv reference_agents, grades each (probe finds no endpoints — honest: their value shows
 // via track record/actions), then honestly auto-categorizes indexed mainnet agents by description keywords.
 // Run: npx tsx --env-file=.env scripts/seed-agents.ts
-import { wallet, pub, REGISTRY_ABI } from "../src/lib/chain";
+import { getWallet, pub, REGISTRY_ABI } from "../src/lib/chain";
 import { A } from "../src/lib/config";
 import { db, kvGet, kvSet } from "../src/lib/db";
 import { gradeAgent } from "../src/lib/grade";
@@ -20,7 +20,7 @@ const TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a
 
 async function registerRef(r: (typeof REFS)[number]): Promise<{ tokenId: number; tx: string }> {
   const dataURI = "data:application/json;base64," + Buffer.from(JSON.stringify({ type: "Agent", name: r.name, description: r.description, category: r.category })).toString("base64");
-  const hash = await wallet.writeContract({ address: A.identity as `0x${string}`, abi: REGISTRY_ABI, functionName: "register", args: [dataURI] });
+  const hash = await getWallet().writeContract({ address: A.identity as `0x${string}`, abi: REGISTRY_ABI, functionName: "register", args: [dataURI] });
   const receipt = await pub.waitForTransactionReceipt({ hash });
   const transfer = receipt.logs.find((l) => l.address.toLowerCase() === A.identity.toLowerCase() && l.topics[0] === TRANSFER_TOPIC && l.topics.length === 4);
   if (!transfer) throw new Error(`no Transfer log in register tx ${hash}`);
@@ -37,7 +37,7 @@ async function main() {
     console.log(`registered ${r.name} → tokenId ${tokenId} tx ${tx}`);
     db.prepare(`INSERT INTO agents(chain_id,token_id,name,description,owner,category,is_reference) VALUES(?,?,?,?,?,?,1)
       ON CONFLICT(chain_id,token_id) DO UPDATE SET name=excluded.name,description=excluded.description,category=excluded.category,is_reference=1`)
-      .run(A.id, tokenId, r.name, r.description, wallet.account!.address, r.category);
+      .run(A.id, tokenId, r.name, r.description, getWallet().account!.address, r.category);
     out.push({ name: r.name, tokenId, category: r.category, registerTx: tx });
     kvSet("reference_agents", JSON.stringify(out)); // persist incrementally — a later failure loses nothing
     const g = await gradeAgent(A.id, tokenId); // honest: no endpoints → low probe score; value shows via track record/actions

@@ -6,8 +6,19 @@ import { A, M, CHAIN, OPERATOR_PK } from "./config";
 const writeChain = CHAIN === "mainnet" ? bsc : bscTestnet;
 export const pub = createPublicClient({ chain: writeChain, transport: fallback([http(A.rpc), http(A.rpcFallback)]) });
 export const pubMain = createPublicClient({ chain: bsc, transport: fallback([http(M.rpc), http(M.rpcFallback)]) });
-export const operator = privateKeyToAccount(OPERATOR_PK);
-export const wallet = createWalletClient({ account: operator, chain: writeChain, transport: http(A.rpc) });
+let _operator: ReturnType<typeof privateKeyToAccount> | null = null;
+export function getOperator() {
+  if (!_operator) {
+    if (!OPERATOR_PK) throw new Error("EVM_PRIVATE_KEY not set");
+    _operator = privateKeyToAccount(OPERATOR_PK);
+  }
+  return _operator;
+}
+let _wallet: any = null;
+export function getWallet() {
+  if (!_wallet) _wallet = createWalletClient({ account: getOperator(), chain: writeChain, transport: http(A.rpc) });
+  return _wallet;
+}
 export const REGISTRY_ABI = parseAbi([
   "function register(string agentURI) returns (uint256)",
   "function tokenURI(uint256 tokenId) view returns (string)",

@@ -42,3 +42,8 @@ Session lifecycle e2e REAL: spike 0xdbf1c748… | full cycle session4: grant 0xb
 ### C4 (subagent, orchestrator-verified 05:15Z)
 All 8 routes + 5 pages; typecheck+build clean; curls 200 ×5; reprobe live probe ~4s + 429 cooldown; honest-copy grep 0 hits; AC-2/AC-4 additions (countdown, stale hint, method note, states). DEV-401 COSMETIC tsconfig ES2020. DEV-402 COSMETIC additive AC items.
 Known risks: (1) reference agents grade F (no endpoints) — IMPROVEMENT queued: serve real A2A cards at /api/a2a/{name} so probes verify them honestly (debug phase); (2) DEV-302 Fly reasoning needs funded key or AltLLM adapter; (3) paced() retry-once (DEV-006).
+
+### C5 + Docker check (subagent + orchestrator, 06:05Z)
+A2A cards live → reference agents F→C honestly (2288 C/69 w/ track 15). proof.md + AGENT-ADVANTAGE-REPORT.md real runs (DEV-501 candor: manual legs win raw seconds on B/C; advantage = cost+cadence). DEV-502 CLI reasoning (inherited 302). DEV-503 gridTick risk-statement (debug item).
+| DEV-601 | chain.ts/attestor.ts | module-level operator/wallet from env | lazy getOperator()/getWallet() | Next build-time page-data collection crashes without .env (broke docker/Fly builds) | COSMETIC | container builds work |
+Docker: `docker build` SUCCESS after DEV-601 (was: "Failed to collect page data for /api/activate"). fly.toml + Dockerfile + .dockerignore committed. Local colima registry TLS flaky (pull retried).

@@ -169,3 +169,34 @@
 ```json
 {"reviewer":"claude","phase":"positioning","verdict":"AGREE","findings":[{"claim_id":"positioning","question":"Is Winnow meaningfully differentiated from the documented competitor field (Marque, KaizenScope, AgentEra, SmartSentinels, 8004scan/RNWY incumbents) on the judged axes? Answer PASS or FAIL only.","lead_answer":"PASS","reviewer_answer":"PASS","reviewer_reasoning":"The three canonical documents establish meaningful differentiation on the judged axes. The research brief (research/research-brief.md) documents each competitor's strengths precisely — Marque (conformance tests, spend-capped 'charters', mainnet PCS receipts), KaizenScope (verification-gated payment, 66 agents probed), AgentEra (full bounty stack, TermiX report with 40.6x/163x/604x claims), SmartSentinels (mainnet agents in all 4 categories), and incumbents 8004scan/RNWY (registry explorers with static scores) — and identifies the whitespace: nobody owns data quality at scale (Sybil-filtered reputation + verified endpoints + receipts), which is explicitly a named judging criterion. Winnow's PRD competitive table shows capabilities absent from both incumbents: live re-probe at view time, recomputable evidence per number (probe transcript FK + verify script), onchain write-back via giveFeedback attestations, and in-product Keystore-enforced capped hiring with 1-click revoke. Against the hackathon field, no single competitor combines these: KaizenScope probes but doesn't recompute or write back; Marque's charters are bespoke vs Winnow's canonical-Keystore-enforced sessions with a live over-cap-revert demo; AgentEra's unbounded multiplier claims are countered by Winnow's honest-window framing; SmartSentinels' mainnet edge is a documented gap (testnet-first writes) but is honestly labeled with a funding runbook, and is a deployment posture rather than an axis-level capability gap. The critique report's own adversarial pass — overlap zones, drift scan, roster audit of 20+ repos — reaches 'differentiated' (not 'unique') with the differentiator concrete, demo-witnessable ('re-verify this number in front of me'), and mapped 1:1 to the published judging criteria. The differentiation is substantiated per-competitor rather than asserted, so the claim holds.","match":true,"resolution_note":"Weak-positive convergence; not proof."}],"resolved":false}
 ```
+
+### build — 2026-09-09T05:45Z
+
+#### Done
+- C0-C5 complete via 5 implementation subagents, orchestrator-verified each: scaffold+franchise skeleton+CI → indexer (18K+ agents live-growing) → probe/grade/attestor → Altana sessions + 4 reference agents + worker → API+UI hero flow → proof + TermiX report. 15+ commits.
+
+#### Additions
+- [NEW] ONCHAIN SESSION LIFECYCLE PROVEN: grant 0xb4433aee… → in-cap exec 0xe22694b9… → over-cap REVERT ExceededSpendLimit → revoke 0x98660860… → isValidKey false. Demo session #5 LIVE (0.005 BNB/24h, grant 0x56918568…).
+- [NEW] Reference agents (testnet ERC-8004 ids 2288-2291) serve REAL A2A cards at /api/a2a/{name} → honestly graded C (a2a_card probe passes). Deploy must rewrite endpoints to Fly URL + re-probe (scripts/regrade-refs.mts).
+- [NEW] ATTESTOR2 second signer 0x5e6cBAb6… (funded 0.01 tBNB) — own-agent attestation path real (tx 0x43980a03…).
+- [NEW] submission/proof.md + submission/AGENT-ADVANTAGE-REPORT.md generated from real runs.
+
+#### Deviations
+- [SKILL] DEV-302/502 (DEGRADED): ALL Anthropic API keys credit-dry — agent reasoning via local `claude -p` CLI (real haiku output). FLY DEPLOY runs LLM-degraded (skip-and-log) until a funded key lands (Downstream D-3).
+- [SKILL] DEV-303/304/305: Altana reality vs ARCH — param is `sessionSigner`; relay requires explicit call targets; fresh session key per grant. All handled in code.
+- [SKILL] DEV-501: TermiX manual legs are operator-tooling lower bounds (honest label); manual beat agent on raw seconds for 2 tasks — report reframes advantage as cost+cadence, deliberately candid.
+
+#### Verified Facts
+- verify-claims green at every gate (orphanGrades 0, negativeAttestations 0). typecheck/build clean. Curls 200 on all pages. Reprobe live ~4s + 429 cooldown works.
+
+#### Assumptions
+- [ASSUMED] Fly deploy will succeed with Dockerfile as written (docker build check running; DT-4 fallbacks ready).
+
+#### Blockers for Downstream
+- None hard. deploy: needs flyctl auth + rewrite a2a endpoints + re-run proof on VM. D-3 (LLM key) and D-1 (mainnet BNB) remain morning items.
+
+#### Key Decisions
+- Reference agents' honesty: graded by the same probe engine as everyone (now C via real cards, F before) — eats-own-dogfood is the demo story, not a weakness.
+
+#### For Next Skill
+- debug: known risks = paced() retry-once (DEV-006); gridTick prompt lacks risk-statement line (DEV-503); OpenOdds feedback=6 farm-branch (heuristic as specified — verify wording in UI is non-accusatory); worker pidfile collision (fixed by clean rerun — confirm single-instance guard); test suite = npm run test:unit + test:api + verify.
