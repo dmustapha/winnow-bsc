@@ -1,5 +1,6 @@
 // File: src/app/proof/page.tsx — INVARIANT 6: every headline number, recomputable
 import { db } from "@/lib/db";
+import { deriveSessionStatus } from "@/lib/session-status";
 export const dynamic = "force-dynamic";
 
 export default function Proof() {
@@ -56,7 +57,7 @@ export default function Proof() {
       {ses.length ? (
         ses.map((s) => (
           <p key={s.id} className="font-[family-name:var(--font-geist-mono)] text-xs mt-1 text-zinc-300">
-            #{s.id} agent#{s.agent_token} wallet {s.agent_wallet?.slice(0, 12)}… cap {s.cap_wei} status {s.status}
+            #{s.id} agent#{s.agent_token} wallet {s.agent_wallet?.slice(0, 12)}… cap {s.cap_wei} status {deriveSessionStatus(s)}
           </p>
         ))
       ) : (

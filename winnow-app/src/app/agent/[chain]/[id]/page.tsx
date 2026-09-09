@@ -12,7 +12,19 @@ export default function AgentPage({ params }: { params: { chain: string; id: str
   const [busy, setBusy] = useState("");
   const [err, setErr] = useState("");
   const [overcap, setOvercap] = useState<any>(null);
+  const [exercise, setExercise] = useState<any>(null); // INTERROGATE FIX (F-45): live in-cap spend result
+  const [activateStage, setActivateStage] = useState(""); // INTERROGATE FIX (F-44): staged grant progress label
   const [cooldownLeft, setCooldownLeft] = useState(0); // AC-2: visible reprobe cooldown countdown
+
+  // INTERROGATE FIX (F-44): the grant is 2 onchain txs + relay round-trips (5-20s) — cycle the busy
+  // label through honest stages so the wait reads as progress, not dead air. Timers clean up on completion.
+  useEffect(() => {
+    if (busy !== "activate") { setActivateStage(""); return; }
+    setActivateStage("Creating session wallet…");
+    const timers = ([[4000, "Registering session key onchain…"], [9000, "Granting spend-capped session…"], [15000, "Almost there…"]] as const)
+      .map(([t, m]) => setTimeout(() => setActivateStage(m), t));
+    return () => timers.forEach(clearTimeout);
+  }, [busy]);
 
   useEffect(() => {
     if (cooldownLeft <= 0) return;
@@ -59,7 +71,8 @@ export default function AgentPage({ params }: { params: { chain: string; id: str
     );
 
   const { agent, grade, attests, actions, sessions } = d;
-  const liveSessions = (sessions ?? []).filter((s: any) => s.status === "live");
+  // INTERROGATE FIX (F-06): expiry-aware — a status='live' row past its expiry must never render as live
+  const liveSessions = (sessions ?? []).filter((s: any) => s.status === "live" && s.expiry * 1000 > Date.now());
 
   const act = async (path: string, body: any, label: string, onJson?: (j: any) => void) => {
     setBusy(label);
@@ -148,7 +161,7 @@ export default function AgentPage({ params }: { params: { chain: string; id: str
             disabled={!!busy}
             className="px-4 py-2 rounded-md bg-blue-700 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
           >
-            {busy === "activate" ? "Granting session…" : "Activate (0.005 BNB cap, 24h)"}
+            {busy === "activate" ? (activateStage || "Granting session…") : "Activate (0.005 BNB cap, 24h)"}
           </button>
         ) : (
           <span className="px-4 py-2 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-500 text-sm">Hiring opens for verified-live agents</span>
@@ -180,6 +193,14 @@ export default function AgentPage({ params }: { params: { chain: string; id: str
                   </div>
                   <p className="text-xs text-zinc-600 mt-1">time remaining on this grant · <span className="tnum font-[family-name:var(--font-geist-mono)]">{Math.floor(msLeft / 3600000)}h {Math.floor((msLeft % 3600000) / 60000)}m</span></p>
                 </div>
+                {/* INTERROGATE FIX (F-45): live in-cap spend through the session key — "see it transact", for real */}
+                <button
+                  onClick={() => act("/api/exercise", { sessionId: s.id }, `exercise-${s.id}`, (j) => setExercise({ ...j, chain: s.agent_chain }))}
+                  disabled={!!busy}
+                  className="px-3 py-1.5 rounded-md bg-emerald-800 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                >
+                  {busy === `exercise-${s.id}` ? "Sending capped spend…" : "Send a capped test spend"}
+                </button>
                 <button
                   onClick={() => act("/api/overcap-demo", { sessionId: s.id }, `overcap-${s.id}`, setOvercap)}
                   disabled={!!busy}
@@ -198,6 +219,18 @@ export default function AgentPage({ params }: { params: { chain: string; id: str
             );})}
           </div>
         </section>
+      )}
+
+      {exercise?.tx && (
+        <div className="mt-4 card p-4 border-emerald-800/60">
+          <p className="text-sm font-semibold text-emerald-300">In-cap spend executed through the session key.</p>
+          <p className="text-xs text-zinc-400 mt-1">
+            0.0001 BNB moved through the spend-capped session, signed by the session key, within the onchain cap.
+            {String(exercise.tx).startsWith("0x") && (
+              <>{" "}<a className="text-emerald-400 hover:text-emerald-300" target="_blank" rel="noreferrer" href={`${explorer(exercise.chain ?? 97)}/tx/${exercise.tx}`}>tx ↗</a></>
+            )}
+          </p>
+        </div>
       )}
 
       {overcap && (

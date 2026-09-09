@@ -1,5 +1,6 @@
 // File: src/app/api/agent/[chain]/[id]/route.ts — detail: agent + grade w/ raw transcript (INVARIANT 1/6)
 import { db } from "@/lib/db";
+import { deriveSessionStatus, isSessionExpired } from "@/lib/session-status";
 import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 export function GET(_: Request, { params }: { params: { chain: string; id: string } }) {
@@ -14,6 +15,9 @@ export function GET(_: Request, { params }: { params: { chain: string; id: strin
   const actions = (agent as any).is_reference
     ? db.prepare("SELECT * FROM agent_actions WHERE agent_token=? ORDER BY id DESC LIMIT 20").all(id)
     : [];
-  const sessions = db.prepare("SELECT * FROM sessions WHERE agent_token=? AND agent_chain=? ORDER BY id DESC LIMIT 5").all(id, chain);
+  // INTERROGATE FIX (F-06): expiry-aware derived status computed server-side so all consumers agree —
+  // a status='live' row past its expiry ships as expired:true / status:'expired' (DB has no expired state).
+  const sessions = (db.prepare("SELECT * FROM sessions WHERE agent_token=? AND agent_chain=? ORDER BY id DESC LIMIT 5").all(id, chain) as any[])
+    .map((s) => ({ ...s, expired: isSessionExpired(s), status: deriveSessionStatus(s) }));
   return NextResponse.json({ agent, grade, attests, actions, sessions });
 }

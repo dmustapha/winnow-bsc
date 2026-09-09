@@ -2,7 +2,7 @@
 
 # Winnow: the trust-graded agent marketplace for BSC
 
-BSC hosts 310,000+ AI agents registered under ERC-8004, and almost none of them can be trusted at face value: roughly 4% declare a live endpoint, 59.2% of reviewers show coordinated feedback patterns, and burned registrations outrank live agents in today's search. Winnow is a marketplace where every number is recomputable: it live-probes agents' declared MCP/A2A endpoints, grades them from raw evidence you can re-run yourself, writes verified liveness back to the canonical onchain registry, and lets you hire any graded agent inside a spend-capped session you can revoke in one click.
+BSC hosts 310,000+ AI agents registered under ERC-8004, and almost none of them can be trusted at face value: roughly 4% declare a live endpoint, 59.2% of reviewers show coordinated feedback patterns (arXiv 2606.26028), and burned registrations outrank live agents in today's search. Winnow is a marketplace where every number is recomputable: it live-probes agents' declared MCP/A2A endpoints, grades them from raw evidence you can re-run yourself, writes verified liveness back to the canonical onchain registry, and lets you hire a graded agent inside a spend-capped session you can revoke in one click (activation ships for the reference agents today; grading covers everyone).
 
 **Live: https://winnow-bsc.onrender.com** · [Proof page](https://winnow-bsc.onrender.com/proof) · [Agent Advantage Report](submission/AGENT-ADVANTAGE-REPORT.md) · [Onchain proof](submission/proof.md)
 
@@ -38,6 +38,8 @@ Canonical registries on BSC: Identity `0x8004A169FB4a3325136EB29fA0ceB6D2e539a43
 
 ### Altana (sessions = the hire button)
 `@altananetwork/sdk` 0.9.0. Activate mints a session with a calls allowlist, a per-day spend cap, and an expiry, enforced onchain by the Keystore (`0x6b8361C29d05D498b1a12B54A37310f94171E94A` testnet). Full lifecycle proven with receipts: grant [`0xb4433aee…`](https://testnet.bscscan.com/tx/0xb4433aeec60cbe2f57f570e4217a3aeec6c0cade5bc24da6b978ce3c265f5953), in-cap execute, over-cap attempt reverting with `ExceededSpendLimit`, revoke, and `isValidKey` flipping onchain. A live demo session stays granted. Operator wallet: `0xc211C942946011859ca634F22400d80570ED12A5`.
+
+Wallet model, stated plainly: sessions are granted from one operator EIP-7702 smart wallet, with per-agent wallets as the allowlisted call targets. This is a deliberate custody-minimizing demo design that keeps one funded key while every grant stays capped, expiring, and revocable onchain. Per-agent Altana wallets, each agent signing from its own smart wallet, are the roadmap. The Keystore enforcement story is identical in both models.
 
 ### TermiX (prove it beats DIY)
 The [Agent Advantage Report](submission/AGENT-ADVANTAGE-REPORT.md) runs three real tasks both ways (agent vs step-by-step manual execution) with wall-clocked timings, costs, a scoring rubric, and every output attached verbatim. One is a trading task with a window label, calibration framing, and a risk statement. The candid finding: on raw seconds the scripted manual path wins two tasks; the agent's provable advantage is cost per decision and 24/7 cadence, and the report says exactly that instead of inventing a multiplier.

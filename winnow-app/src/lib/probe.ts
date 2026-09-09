@@ -1,6 +1,7 @@
 // File: src/lib/probe.ts
 import { db } from "./db";
 import { agentDetail } from "./scan8004";
+import { assertPublicHttp } from "./netguard";
 type Check = { name: string; ok: boolean; ms: number; detail: string };
 async function timed(name: string, fn: () => Promise<string>): Promise<Check> {
   const t0 = Date.now();
@@ -16,12 +17,14 @@ export async function runProbe(chainId: number, tokenId: number) {
   const a = db.prepare("SELECT * FROM agents WHERE chain_id=? AND token_id=?").get(chainId, tokenId) as any;
   const checks: Check[] = [];
   if (a?.mcp_server) checks.push(await timed("mcp_initialize", async () => {
+    await assertPublicHttp(a.mcp_server); // INTERROGATE FIX (F-56): never fetch private/invalid endpoints
     const r = await fetch(a.mcp_server, { method: "POST", headers: { "content-type": "application/json", accept: "application/json, text/event-stream" },
       body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "winnow-probe", version: "1" } } }),
       signal: AbortSignal.timeout(6000) });
     return `HTTP ${r.status}`;
   }));
   if (a?.a2a_endpoint) checks.push(await timed("a2a_card", async () => {
+    await assertPublicHttp(a.a2a_endpoint); // INTERROGATE FIX (F-56)
     const r = await fetch(a.a2a_endpoint, { signal: AbortSignal.timeout(6000) });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const j = await r.json(); return `card ok: ${j?.name ?? "unnamed"}`;

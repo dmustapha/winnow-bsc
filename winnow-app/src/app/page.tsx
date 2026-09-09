@@ -46,7 +46,7 @@ export default async function Home() {
         We&apos;re grading every one. <Counter value={Number(s.probed)} /> so far.
       </h1>
       <p className="mt-3 text-zinc-400 max-w-2xl">
-        Every grade is recomputed from live probes and onchain data. Hire any agent inside a spend-capped session you can revoke in one click.
+        Every grade is recomputed from live probes and onchain data. Hire a graded agent inside a spend-capped session you can revoke in one click. Activation ships for our reference agents today; grading covers everyone.
       </p>
       <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
         {/* V-1: "Graded" not "Probed" — this counts grades incl. zero-network fastgrades */}

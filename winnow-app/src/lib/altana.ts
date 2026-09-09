@@ -69,7 +69,9 @@ export async function activateAgent(agentName: string, refTokenId: number, capWe
     },
     expiry,
   });
-  // [CRITIQUE E-4] persist rowId + session handle ATOMICALLY at grant — revoke()/demonstrateOverCap() read kv session_handle_{id}
+  // [CRITIQUE E-4] persist rowId + session handle back-to-back at grant — revoke()/demonstrateOverCap() read kv session_handle_{id}.
+  // INTERROGATE FIX (ATOMIC): these are two sequential writes, NOT one transaction — a crash between them
+  // leaves a sessions row without its kv handle (recovered by re-granting; onchain grant stays cap+expiry bound).
   const info = db.prepare("INSERT INTO sessions(agent_chain,agent_token,agent_wallet,session_key,cap_wei,expiry,grant_tx,status) VALUES(?,?,?,?,?,?,?,'live')")
     .run(A.id, refTokenId, wallet.address, privateKeyToAccount(sessionPk).address, capWei.toString(), expiry, grant.transactionHash ?? "onchain");
   const sessionId = Number(info.lastInsertRowid);
@@ -96,6 +98,19 @@ export async function sessionExecute(sessionRowId: number, to: `0x${string}`, va
   const h = loadHandle(sessionRowId);
   const session: Session = s.deserializeSession(h.stored, s.signerFromPrivateKey(h.sessionPk));
   return altana.execute({ session, calls: { to, value, ...(data ? { data } : {}) } });
+}
+
+// INTERROGATE FIX (F-45): one REAL in-cap spend through the stored session handle — makes "see it
+// transact" live in the UI. Targets the session's own allowlisted call target (same rule as the
+// over-cap demo) with 0.0001 BNB, well inside the 0.005 BNB/day cap.
+export async function exerciseSession(sessionRowId: number): Promise<string> {
+  const { s, altana } = await sdk();
+  const h = loadHandle(sessionRowId);
+  const session: Session = s.deserializeSession(h.stored, s.signerFromPrivateKey(h.sessionPk));
+  const allowed = (h.stored.permissions.calls?.[0] as any)?.to as `0x${string}` | undefined;
+  if (!allowed) throw new Error("no allowed call target in stored session");
+  const res = await altana.execute({ session, calls: { to: allowed, value: 100000000000000n } }); // 0.0001 BNB
+  return res.transactionHash ?? "onchain";
 }
 
 // Over-cap revert demo — INVARIANT 5: attempt an execute EXCEEDING the session spend cap; validator rejects; capture as proof.

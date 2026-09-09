@@ -31,6 +31,10 @@ ${att.map((t) => `- [${t.tag}=${t.value}] agent#${t.token_id} tx ${ex}/tx/${t.tx
 ## Sessions (Altana Keystore ${A.keystore} — full lifecycle)
 ${ses.map((s) => `- #${s.id} agent#${s.agent_token} cap=${s.cap_wei}wei expiry=${s.expiry} status=${s.status}\n  - grant ${ex}/tx/${s.grant_tx}${s.revoke_tx ? `\n  - revoke ${ex}/tx/${s.revoke_tx}` : ""}`).join("\n")}
 
+## Session lifecycle receipts (INVARIANT 5)
+- In-cap execute (session #4 path, 0.0001 BNB signed by the session key, inside the cap): ${ex}/tx/0xe22694b915ac1ef35f4028cc52f4fe7c7f634dd30b69581839fed97386d28b10 (receipt status 0x1)
+- Over-cap attempt: rejected with \`ExceededSpendLimit\` before any transaction lands — the absence of a tx IS the enforcement evidence. Recompute live: \`RUN_LIVE=1 npx tsx tests/falsify/overcap-live.test.ts\` (60s cooldown).
+
 ## Agent action txs
 ${acts.map((a) => `- ${a.kind} ${ex}/tx/${a.tx_hash}`).join("\n")}
 `;

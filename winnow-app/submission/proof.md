@@ -41,5 +41,9 @@ Write-side chain: BSC testnet (97) — every explorer link below is on https://t
 - #5 agent#2288 cap=5000000000000000wei expiry=1789013634 status=live
   - grant https://testnet.bscscan.com/tx/0x569185684eea4ac90ea3ece3ec716a1f29d142e09d003a4969b9a25bc76b6697
 
+## Session lifecycle receipts (INVARIANT 5)
+- In-cap execute (session #4 path, 0.0001 BNB signed by the session key, inside the cap): https://testnet.bscscan.com/tx/0xe22694b915ac1ef35f4028cc52f4fe7c7f634dd30b69581839fed97386d28b10 (receipt status 0x1)
+- Over-cap attempt: rejected with `ExceededSpendLimit` before any transaction lands — the absence of a tx IS the enforcement evidence. Recompute live: `RUN_LIVE=1 npx tsx tests/falsify/overcap-live.test.ts` (60s cooldown).
+
 ## Agent action txs
 - hf_check https://testnet.bscscan.com/tx/0x3936ca8b0417fc9a4f3d8a254a6c8637710294ebfd9db2f5188600a5cdb64fe1
