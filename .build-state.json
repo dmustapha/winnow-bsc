@@ -1,8 +1,61 @@
-{ "project": "winnow", "currentPhase": "C0", "currentStep": "0.1", "currentSubStep": null,
-  "status": "in-progress", "autonomous_mode": true, "completedSteps": [], "fileGroups": {},
-  "deviations": [], "phaseExecutors": {}, "contractAddresses": {}, "env": {}, "devPort": 3000,
-  "depsVerified": false, "invariantsConsumed": true,
-  "franchiseSkeletonScaffolded": { "claimsLedger": false, "recomputeVerifier": false, "securityMd": false, "honestyLedger": false },
-  "ciScaffolded": false, "verification_commands": [], "screenshot_paths": [], "context_percentage": 0,
-  "expected_phases": ["C0","C1","C2","C3","C4","C5","C6"],
-  "timestamp": "2026-09-09T03:40:00Z" }
+{
+  "project": "winnow",
+  "currentPhase": "C5",
+  "currentStep": "0.1",
+  "currentSubStep": null,
+  "status": "in-progress",
+  "autonomous_mode": true,
+  "completedSteps": [
+    "0.1",
+    "0.2",
+    "0.3",
+    "1.1",
+    "1.2",
+    "2.1",
+    "2.2",
+    "2.3",
+    "3.1",
+    "3.2",
+    "3.3",
+    "4.1",
+    "4.2"
+  ],
+  "fileGroups": {},
+  "deviations": [],
+  "phaseExecutors": {
+    "C0": "subagent",
+    "C1": "subagent",
+    "C2": "subagent",
+    "C3": "subagent",
+    "C4": "subagent"
+  },
+  "contractAddresses": {},
+  "env": {
+    "PCS_POOL": "0x36696169C63e42cd08ce11f5deeBbCeBae652050",
+    "WATCH_ADDR": "0xe5EC006540bE4F7CbB2CBc7Be79708a6d96F90dC",
+    "ATTESTOR2": "0x5e6cBAb6C130C21f329209697e050773f72F92c1"
+  },
+  "devPort": 3000,
+  "depsVerified": true,
+  "invariantsConsumed": true,
+  "franchiseSkeletonScaffolded": {
+    "claimsLedger": true,
+    "recomputeVerifier": true,
+    "securityMd": true,
+    "honestyLedger": true
+  },
+  "ciScaffolded": true,
+  "verification_commands": [],
+  "screenshot_paths": [],
+  "context_percentage": 0,
+  "expected_phases": [
+    "C0",
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "C5",
+    "C6"
+  ],
+  "timestamp": "2026-09-09T03:40:00Z"
+}
