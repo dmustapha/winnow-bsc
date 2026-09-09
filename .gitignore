@@ -9,3 +9,6 @@ warroom/.warroom-state.json
 .codebase-manifest.md
 .pipeline-progress.log
 .input-manifest.json
+winnow/.forge-state.json
+PULSE.md
+pipeline-log.md
