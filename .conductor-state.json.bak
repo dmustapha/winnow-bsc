@@ -50,9 +50,21 @@
   },
   "checkpoints_answered": {
     "manifest": true,
-    "idea_selection": true
+    "idea_selection": true,
+    "post_forge_credentials": true
   },
-  "confirmed_urls": {},
+  "confirmed_urls": {
+    "scan8004": "https://api.8004scan.io/api/v1 (200)",
+    "altana_docs": "200",
+    "altana_sdk_npm": "200",
+    "venus_api": "200 (result[] shape confirmed)",
+    "altana_testnet_explorer": "200",
+    "altana_explorer": "200",
+    "studio_docs": "200",
+    "pcs_docs": "200",
+    "bsc_mainnet_rpc": "200",
+    "bsc_testnet_rpc": "200"
+  },
   "pipeline": {
     "phases": {
       "intel": {
@@ -74,14 +86,20 @@
         "verdict": "pass"
       },
       "critique": {
-        "status": "running",
-        "dispatched_at": "2026-09-09T03:24:28Z"
+        "status": "complete",
+        "dispatched_at": "2026-09-09T03:24:28Z",
+        "completed_at": "2026-09-09T03:32:49Z",
+        "verdict": "pass"
       },
       "url_preverify": {
-        "status": "pending"
+        "status": "complete",
+        "dispatched_at": "2026-09-09T03:33:10Z",
+        "completed_at": "2026-09-09T03:34:03Z",
+        "verdict": "pass"
       },
       "build": {
-        "status": "pending"
+        "status": "running",
+        "dispatched_at": "2026-09-09T03:34:08Z"
       },
       "debug": {
         "status": "pending"
@@ -154,5 +172,10 @@
     "architectureLines": 909,
     "planLines": 308,
     "featureObservablesPath": "winnow/FEATURE-OBSERVABLES.md"
+  },
+  "critiqueState": {
+    "status": "complete",
+    "verdict": "proceed",
+    "elevations_applied": 4
   }
 }

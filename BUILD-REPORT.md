@@ -47,3 +47,10 @@ Known risks: (1) reference agents grade F (no endpoints) — IMPROVEMENT queued:
 A2A cards live → reference agents F→C honestly (2288 C/69 w/ track 15). proof.md + AGENT-ADVANTAGE-REPORT.md real runs (DEV-501 candor: manual legs win raw seconds on B/C; advantage = cost+cadence). DEV-502 CLI reasoning (inherited 302). DEV-503 gridTick risk-statement (debug item).
 | DEV-601 | chain.ts/attestor.ts | module-level operator/wallet from env | lazy getOperator()/getWallet() | Next build-time page-data collection crashes without .env (broke docker/Fly builds) | COSMETIC | container builds work |
 Docker: `docker build` SUCCESS after DEV-601 (was: "Failed to collect page data for /api/activate"). fly.toml + Dockerfile + .dockerignore committed. Local colima registry TLS flaky (pull retried).
+
+## Final Summary
+- Phases C0-C5 + docker check: COMPLETE, orchestrator-verified with pasted evidence per phase above.
+- Deviations: 13 total (DEV-001..006, 301..305, 401..402, 501..503, 601) — 0 UNTESTED, 3 DEGRADED (302/502 LLM key; 006 paced retry; 501 timing framing), rest COSMETIC.
+- Untested deviation count: 0. Known risks: 4 (listed above, routed to debug).
+- Onchain proof inventory: 2 attestation txs, 4 registrations, 5 sessions (1 live), 1 in-cap exec, 1 over-cap revert, 1 revoke — all testnet chain 97, receipts verified.
+- Repo: https://github.com/dmustapha/winnow-bsc (public, main).
