@@ -1,0 +1,13 @@
+{
+  "name": "Winnow",
+  "tagline": "The trust-graded agent marketplace for BSC",
+  "colorMode": "dark-only",
+  "brandColor": "#34d399",
+  "ink": ["#09090b", "rgba(24,24,27,0.4)", "rgba(24,24,27,0.7)", "#27272a", "#52525b"],
+  "semantic": { "success": "#34d399", "warning": "#fbbf24", "danger": "#f87171" },
+  "fonts": { "display": "Geist Sans", "body": "Geist Sans", "mono": "Geist Mono" },
+  "radii": { "sm": 4, "md": 6, "lg": 8 },
+  "shadowPhilosophy": "pure-glow",
+  "signatureElement": "Ticking tabular-numeral measurement counters with pulsing emerald live dot; every figure DB-derived and recomputable",
+  "accent": "#34d399"
+}

@@ -51,7 +51,8 @@
   "checkpoints_answered": {
     "manifest": true,
     "idea_selection": true,
-    "post_forge_credentials": true
+    "post_forge_credentials": true,
+    "design_handoff": true
   },
   "confirmed_urls": {
     "scan8004": "https://api.8004scan.io/api/v1 (200)",
@@ -122,7 +123,8 @@
         "verdict": "pass_with_blockers"
       },
       "design_forge": {
-        "status": "pending"
+        "status": "running",
+        "dispatched_at": "2026-09-09T05:44:24Z"
       },
       "stress_test": {
         "status": "pending"

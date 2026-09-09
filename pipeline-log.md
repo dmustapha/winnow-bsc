@@ -42,3 +42,6 @@ Inputs: winnow/{PRD,ARCHITECTURE,PLAN,INVARIANTS}.md, warroom/WINNER-BRIEF.md, r
 2026-09-09T05:27:41Z | hackathon-verify | START | verify_milestone | milestone audit dispatched (autonomous)
 2026-09-09T05:41:50Z | hackathon-verify | COMPLETE | verify_milestone | PROCEED - observables 6/6 STRONG, THESIS pass, 0 KZ triggered, 0 failed recomputes
 2026-09-09T05:43:23Z | verify_milestone | COMPLETE | verify_milestone | gate=pass verdict=pass_with_blockers (claims ledger empty; no VERIFIED facts in PULSE section; ship-check: git: 12 uncommitted change(s) beyond pipeline state files;hygiene: 10 pipeline-state/.env file(s) TRACKED in the repo)
+2026-09-09T05:44:02Z | conductor | CHECKPOINT | cp4-design-brief | [AUTO] derived DESIGN_BRIEF.md
+2026-09-09T05:44:24Z | conductor | CHECKPOINT | design_handoff | [AUTO] proceed — DESIGN_BRIEF.md derived, design_forge dispatch
+2026-09-09T05:44:24Z | design_forge | START | design_forge | Dispatching design_forge

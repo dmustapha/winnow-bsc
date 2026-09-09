@@ -35,7 +35,7 @@ export default function AgentPage({ params }: { params: { chain: string; id: str
   if (failed)
     return (
       <main className="max-w-4xl mx-auto px-6 py-12">
-        <p className="text-amber-400">Couldn&apos;t reach the API — refresh in a moment.</p>
+        <p className="text-amber-400">Couldn&apos;t reach the API. Refresh in a moment.</p>
         <a className="text-emerald-400 hover:text-emerald-300 text-sm mt-2 inline-block" href="/">← Back to the index</a>
       </main>
     );
@@ -53,7 +53,7 @@ export default function AgentPage({ params }: { params: { chain: string; id: str
     return (
       <main className="max-w-4xl mx-auto px-6 py-12">
         <h1 className="text-xl font-bold">Not indexed (yet).</h1>
-        <p className="text-zinc-400 mt-2 text-sm">This agent hasn&apos;t reached our index — the crawl is live and growing.</p>
+        <p className="text-zinc-400 mt-2 text-sm">This agent hasn&apos;t reached our index yet. The crawl is live and growing.</p>
         <a className="text-emerald-400 hover:text-emerald-300 text-sm mt-3 inline-block" href="/">← Back to the index</a>
       </main>
     );
@@ -95,14 +95,43 @@ export default function AgentPage({ params }: { params: { chain: string; id: str
           <p className="text-sm text-red-300 font-semibold">Why the {grade.letter}?</p>
           <p className="text-sm text-zinc-400 mt-1">
             Our live probe found weak evidence this agent actually runs: liveness {grade.liveness}/40, metadata {grade.meta}/15, feedback validity {grade.feedback}/30, track record {grade.track}/15.
-            The raw transcript below is the evidence — re-probe any time to recompute.
+            The raw transcript below is the evidence. Re-probe any time to recompute.
           </p>
         </div>
       )}
       {!grade && (
         <div className="mt-4 card p-4">
-          <p className="text-sm text-zinc-400">Not yet probed — indexed honestly, grade pending. Hit &ldquo;Probe now&rdquo; to grade it live in front of you.</p>
+          <p className="text-sm text-zinc-400">Not yet probed. Indexed honestly, grade pending. Hit &ldquo;Probe now&rdquo; to grade it live in front of you.</p>
         </div>
+      )}
+
+      {/* Grade breakdown is the hero: measured bars + the raw transcript as the evidence drawer */}
+      {grade && (
+        <section className="mt-6 card p-5">
+          <h2 className="font-semibold">
+            Grade breakdown <span className="text-xs text-zinc-500 font-normal tnum font-[family-name:var(--font-geist-mono)]">probed {grade.ran_at} UTC</span>
+            {Date.now() - new Date(`${grade.ran_at}Z`).getTime() > 86400000 && (
+              <span className="ml-2 text-xs text-amber-400 font-normal">grade &gt;24h old. Re-probe suggested</span>
+            )}
+          </h2>
+          <div className="mt-4 grid gap-3">
+            {([["Liveness", grade.liveness, 40], ["Metadata", grade.meta, 15], ["Feedback validity", grade.feedback, 30], ["Track record", grade.track, 15]] as const).map(([l, v, m]) => (
+              <div key={String(l)}>
+                <div className="flex items-baseline justify-between text-sm">
+                  <span className="text-zinc-400">{l}</span>
+                  <span className="tnum font-[family-name:var(--font-geist-mono)]">{v}/{m}</span>
+                </div>
+                <div className="meter mt-1.5" role="meter" aria-label={`${l}: ${v} of ${m}`} aria-valuenow={Number(v)} aria-valuemin={0} aria-valuemax={Number(m)}>
+                  <div className="meter-fill" style={{ width: `${Math.max(0, Math.min(100, (Number(v) / Number(m)) * 100))}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+          <details className="mt-4 group">
+            <summary className="cursor-pointer text-emerald-400 hover:text-emerald-300 text-sm select-none">Raw probe transcript (the evidence)</summary>
+            <pre className="mt-2 text-xs well p-3 overflow-auto max-h-64">{grade.transcript}</pre>
+          </details>
+        </section>
       )}
 
       <div className="mt-6 flex gap-3 flex-wrap items-center">
@@ -131,17 +160,25 @@ export default function AgentPage({ params }: { params: { chain: string; id: str
         <section className="mt-8">
           <h2 className="font-semibold">Live sessions <span className="text-xs text-zinc-500 font-normal">spend-capped by the Altana Keystore, onchain</span></h2>
           <div className="mt-2 grid gap-2">
-            {liveSessions.map((s: any) => (
+            {liveSessions.map((s: any) => {
+              const msLeft = Math.max(0, s.expiry * 1000 - Date.now());
+              const total = Math.max(1, s.expiry * 1000 - new Date(`${s.created_at}Z`).getTime());
+              const leftPct = Math.max(0, Math.min(100, (msLeft / total) * 100));
+              return (
               <div key={s.id} className="card p-4 flex flex-wrap items-center gap-3">
                 <div className="flex-1 min-w-0 text-sm">
-                  <span className="font-[family-name:var(--font-geist-mono)] text-zinc-300">session #{s.id}</span>
-                  <span className="text-zinc-500"> · cap {(Number(s.cap_wei) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 6 })} BNB · expires {new Date(s.expiry * 1000).toLocaleString()}</span>
+                  <span className="tnum font-[family-name:var(--font-geist-mono)] text-zinc-300">session #{s.id}</span>
+                  <span className="text-zinc-500"> · spend cap <span className="tnum font-[family-name:var(--font-geist-mono)] text-zinc-300">{(Number(s.cap_wei) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 6 })} BNB</span> (enforced onchain) · expires {new Date(s.expiry * 1000).toLocaleString()}</span>
                   {s.grant_tx && s.grant_tx.startsWith("0x") && (
                     <>
                       {" · "}
                       <a className="text-emerald-400 hover:text-emerald-300" target="_blank" rel="noreferrer" href={`${explorer(s.agent_chain)}/tx/${s.grant_tx}`}>grant tx ↗</a>
                     </>
                   )}
+                  <div className="meter mt-2 max-w-xs" role="meter" aria-label={`Session time remaining: ${Math.round(leftPct)} percent`} aria-valuenow={Math.round(leftPct)} aria-valuemin={0} aria-valuemax={100}>
+                    <div className="meter-fill" style={{ width: `${leftPct}%` }} />
+                  </div>
+                  <p className="text-xs text-zinc-600 mt-1">time remaining on this grant · <span className="tnum font-[family-name:var(--font-geist-mono)]">{Math.floor(msLeft / 3600000)}h {Math.floor((msLeft % 3600000) / 60000)}m</span></p>
                 </div>
                 <button
                   onClick={() => act("/api/overcap-demo", { sessionId: s.id }, `overcap-${s.id}`, setOvercap)}
@@ -158,7 +195,7 @@ export default function AgentPage({ params }: { params: { chain: string; id: str
                   {busy === `revoke-${s.id}` ? "Revoking…" : `Fire (revoke #${s.id})`}
                 </button>
               </div>
-            ))}
+            );})}
           </div>
         </section>
       )}
@@ -167,10 +204,10 @@ export default function AgentPage({ params }: { params: { chain: string; id: str
         <div className="mt-4 card p-4 border-amber-800/60">
           <p className="text-sm font-semibold text-amber-300">{overcap.reverted ? "Over-cap spend REVERTED onchain." : "Unexpected result"}</p>
           <p className="text-xs text-zinc-400 mt-1">
-            We tried to spend 2× the session cap. The Altana Keystore rejected it — the cap is enforced onchain, not by this UI.
+            We tried to spend 2× the session cap. The Altana Keystore rejected it. The cap is enforced onchain, not by this UI.
           </p>
           {overcap.error && (
-            <pre className="mt-2 text-xs bg-zinc-900 rounded p-3 overflow-auto text-red-300">{overcap.error}</pre>
+            <pre className="mt-2 text-xs well p-3 overflow-auto text-red-300">{overcap.error}</pre>
           )}
         </div>
       )}
@@ -183,29 +220,6 @@ export default function AgentPage({ params }: { params: { chain: string; id: str
               #{s.id} revoked{s.revoke_tx && s.revoke_tx.startsWith("0x") ? <> · <a className="text-emerald-400 hover:text-emerald-300" target="_blank" rel="noreferrer" href={`${explorer(s.agent_chain)}/tx/${s.revoke_tx}`}>revoke tx ↗</a></> : null}
             </p>
           ))}
-        </section>
-      )}
-
-      {grade && (
-        <section className="mt-8">
-          <h2 className="font-semibold">
-            Grade breakdown <span className="text-xs text-zinc-500 font-normal">probed {grade.ran_at} UTC</span>
-            {Date.now() - new Date(`${grade.ran_at}Z`).getTime() > 86400000 && (
-              <span className="ml-2 text-xs text-amber-400 font-normal">grade &gt;24h old — re-probe suggested</span>
-            )}
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2 text-center text-sm">
-            {([["Liveness", grade.liveness, 40], ["Metadata", grade.meta, 15], ["Feedback validity", grade.feedback, 30], ["Track record", grade.track, 15]] as const).map(([l, v, m]) => (
-              <div key={String(l)} className="card p-3">
-                <div className="font-[family-name:var(--font-geist-mono)]">{v}/{m}</div>
-                <div className="text-xs text-zinc-500 mt-0.5">{l}</div>
-              </div>
-            ))}
-          </div>
-          <details className="mt-3 group">
-            <summary className="cursor-pointer text-emerald-400 hover:text-emerald-300 text-sm select-none">Raw probe transcript (the evidence)</summary>
-            <pre className="mt-2 text-xs bg-zinc-900 border border-zinc-800 p-3 rounded-lg overflow-auto max-h-64">{grade.transcript}</pre>
-          </details>
         </section>
       )}
 

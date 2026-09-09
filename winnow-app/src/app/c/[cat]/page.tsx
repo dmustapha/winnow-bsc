@@ -28,11 +28,11 @@ export default async function Cat({ params }: { params: { cat: string } }) {
       {info.desc && <p className="text-zinc-400 text-sm mt-1">{info.desc}</p>}
       <div className="mt-6 grid gap-3">
         {items === null ? (
-          <p className="text-amber-400 text-sm">Couldn&apos;t load agents right now — refresh in a moment.</p>
+          <p className="text-amber-400 text-sm">Couldn&apos;t load agents right now. Refresh in a moment.</p>
         ) : items.length ? (
           items.map((a: any) => <AgentCard key={`${a.chain_id}:${a.token_id}`} a={a} />)
         ) : (
-          <p className="text-zinc-500">No agents categorized here yet — reference agents seed at launch, and real indexed agents are auto-categorized (labeled) as the index grows.</p>
+          <p className="text-zinc-500">No agents categorized here yet. Reference agents seed at launch, and real indexed agents are auto-categorized (labeled) as the index grows.</p>
         )}
       </div>
     </main>

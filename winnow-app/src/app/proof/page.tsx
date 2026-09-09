@@ -42,13 +42,13 @@ export default function Proof() {
           </p>
         ))
       ) : (
-        <p className="text-zinc-500 text-xs mt-1">No attestations yet — they land as the attestor verifies live agents.</p>
+        <p className="text-zinc-500 text-xs mt-1">No attestations yet. They land as the attestor verifies live agents.</p>
       )}
 
       <h2 id="method" className="mt-5 font-semibold">Method note</h2>
       <ul className="text-xs text-zinc-400 mt-1 space-y-1 list-disc list-inside">
         <li><span className="text-zinc-300">Feedback validity</span> is a coordinated-feedback <em>heuristic</em> (clustered clients, repeated scores), not proven sybil classification.</li>
-        <li><span className="text-zinc-300">Categories</span> on non-reference agents come from honest keyword auto-tagging of their published descriptions — labeled as auto, never hand-curated.</li>
+        <li><span className="text-zinc-300">Categories</span> on non-reference agents come from honest keyword auto-tagging of their published descriptions, labeled as auto, never hand-curated.</li>
         <li>Grades cover probed agents only ({stats.probed} so far, growing); we index everything but never claim the full corpus is probed.</li>
       </ul>
 
@@ -60,7 +60,7 @@ export default function Proof() {
           </p>
         ))
       ) : (
-        <p className="text-zinc-500 text-xs mt-1">No sessions yet — activate a reference agent to grant the first spend-capped session.</p>
+        <p className="text-zinc-500 text-xs mt-1">No sessions yet. Activate a reference agent to grant the first spend-capped session.</p>
       )}
     </main>
   );

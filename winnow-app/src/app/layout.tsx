@@ -7,7 +7,7 @@ const geistSans = localFont({ src: "./fonts/GeistVF.woff", variable: "--font-gei
 const geistMono = localFont({ src: "./fonts/GeistMonoVF.woff", variable: "--font-geist-mono", weight: "100 900" });
 
 export const metadata: Metadata = {
-  title: "Winnow — the trust-graded agent marketplace for BSC",
+  title: "Winnow: the trust-graded agent marketplace for BSC",
   description: "The trust-graded agent marketplace for BSC. Live probes, recomputable grades, spend-capped hiring.",
 };
 
@@ -22,7 +22,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-950 text-zinc-100 min-h-screen font-[family-name:var(--font-geist-sans)]`}>
-        <nav className="sticky top-0 z-10 border-b border-zinc-800/80 bg-zinc-950/85 backdrop-blur px-6 py-3 flex gap-5 items-center">
+        {/* CF-3 glass recipe: backdrop-blur + inset edge highlight in the same shadow stack */}
+        <nav className="sticky top-0 z-10 border-b border-zinc-800/80 bg-zinc-950/85 backdrop-blur shadow-[inset_0_-1px_0_0_rgba(255,255,255,0.04)] px-6 py-3 flex gap-5 items-center">
           <a href="/" className="font-bold text-lg tracking-tight hover:text-emerald-400">Winnow</a>
           {NAV.map(([href, label]) => (
             <a key={href} href={href} className="text-sm text-zinc-400 hover:text-white hidden sm:inline">{label}</a>
