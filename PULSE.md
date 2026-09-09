@@ -315,3 +315,30 @@
 - design_forge: do NOT touch honesty wording (E-1 line, "insufficient independently-validated feedback", chain labels) — verified compliant. Session 5 LIVE, do not revoke. Cooldowns: overcap 60s/session, reprobe 20s/agent, activate 60s global.
 - stress_test: DH-4/DH-5/DH-7 are yours. API params: `cat=`, `{chain,id}`.
 - deploy: V-1 + W-1 + DH-2 + D-1; regenerate proof.md on VM; keep host awake Sep 9-23.
+
+### design_forge — 2026-09-09T06:55Z
+
+#### Done
+- Formalize: winnow-app/DESIGN_SYSTEM.md + brand.json extracted from shipped code (zinc-950 base, single emerald hue, Geist Sans/Mono, radius 4/6/8, pure-glow shadow philosophy). DESIGN_BRIEF.md identity gate consumed [AUTO].
+- Craft floor to zero: audit.js 30 files, 0 violations. CF-1 radius tokens in :root; CF-2 card/well elevation ladder; CF-3 nav glass inset highlight; CF-4 hover translateY(-1px)+glow inside @media(hover:hover), focus-visible app-wide; CF-6 hero clamp(); .tnum tabular-nums.
+- Landing signature moment: Counter.tsx (rAF tick-up to real /api/stats values, reduced-motion safe), pulsing live dot, category tiles carry real gradedByCat counts (new honest SQL in /api/stats).
+- Agent detail: grade breakdown promoted to hero card with 4 meters (liveness/meta/feedback/track, aria roles), transcript stays as evidence drawer (.well), live-session panel shows spend cap (mono) + time-remaining meter. Category loading.tsx skeleton added.
+- Em-dash sweep across UI copy only (title now "Winnow: the ..."); verified honesty wording in lib/ untouched per verify_milestone directive; session 5 not touched.
+- Gates: tsc clean, next build clean, curls 200 on / /c/health-factor /agent/56/49637 /proof, server killed after. 4 desktop screenshots in winnow-app/screenshots/. Commits c444513 + follow-up in winnow-app repo.
+
+#### Deviations
+- [AUTO] logo_forge SKIPPED (50-min hard box per dispatch; existing favicon ships). Amplifier peer-perspective SKIPPED (advisory, time box). Persona critique not spawned; mobile screenshots not captured.
+- [SKILL] audit.js Rule 23 hover check is a false positive by construction (negative lookbehind cannot cross the media query brace); satisfied via equivalent :is(.card-hover:hover) selector.
+
+#### Blockers for Downstream
+- None hard.
+
+## Downstream Items
+| P | Owner | Item |
+|---|---|---|
+| P2 | verify_preflight | design amplifier peer-perspective + persona critique skipped under time box; PERSPECTIVE-RESPONSE-design.json absent (advisory only) |
+| P3 | package | no generated logo; favicon.ico only. Generate logo.svg/png if time allows |
+
+#### For Next Skill
+- stress_test: new surfaces = /api/stats gradedByCat map, Counter component, grade meters, session time-remaining meter, /c/[cat]/loading.tsx.
+- deploy: brand.json + DESIGN_SYSTEM.md live in winnow-app/ for demo-video/README consumption; screenshots/ has fresh 1440px captures of all 4 pages.
