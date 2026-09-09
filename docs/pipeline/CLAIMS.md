@@ -2,14 +2,14 @@
 
 | Phase | Verdict | Reason | State status | Updated |
 |---|---|---|---|---|
-| intel | pass | — | complete | 2026-09-09T06:13:39Z |
-| warroom | pass | — | complete | 2026-09-09T06:13:39Z |
-| forge | pass | — | complete | 2026-09-09T06:13:39Z |
-| critique | pass | — | complete | 2026-09-09T06:13:39Z |
-| build | pass | — | complete | 2026-09-09T06:13:39Z |
-| debug | pass_with_blockers | 1 lens contract(s) MISSING (MISSING != SAME) | complete | 2026-09-09T06:13:39Z |
-| wire | pass_with_blockers | wire=WIRED-WITH-DEGRADATION | WIRED-WITH-DEGRADATION | 2026-09-09T06:13:39Z |
-| verify_milestone | pass_with_blockers | claims ledger empty | complete | 2026-09-09T06:13:39Z |
-| design_forge | pass | — | complete | 2026-09-09T06:13:39Z |
-| stress_test | fail | ablation performed but evidence log unresolved/empty/uninformative (N-32a) | complete | 2026-09-09T06:13:39Z |
-| verify_preflight | fail | claims ledger applicable but empty | complete | 2026-09-09T06:13:40Z |
+| intel | pass | — | complete | 2026-09-09T06:14:28Z |
+| warroom | pass | — | complete | 2026-09-09T06:14:28Z |
+| forge | pass | — | complete | 2026-09-09T06:14:28Z |
+| critique | pass | — | complete | 2026-09-09T06:14:28Z |
+| build | pass | — | complete | 2026-09-09T06:14:28Z |
+| debug | pass_with_blockers | 1 lens contract(s) MISSING (MISSING != SAME) | complete | 2026-09-09T06:14:28Z |
+| wire | pass_with_blockers | wire=WIRED-WITH-DEGRADATION | WIRED-WITH-DEGRADATION | 2026-09-09T06:14:28Z |
+| verify_milestone | pass_with_blockers | claims ledger empty | complete | 2026-09-09T06:14:28Z |
+| design_forge | pass | — | complete | 2026-09-09T06:14:28Z |
+| stress_test | pass | — | complete | 2026-09-09T06:14:28Z |
+| verify_preflight | fail | claims ledger applicable but empty | complete | 2026-09-09T06:14:28Z |
