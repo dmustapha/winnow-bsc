@@ -1,5 +1,5 @@
 # Winnow — Proof
-Generated 2026-09-09T04:30:00.939Z
+Generated 2026-09-09T09:43:54.036Z
 Write-side chain: BSC testnet (97) — every explorer link below is on https://testnet.bscscan.com. Market-data reads are BSC mainnet.
 
 ## Wallets (Altana submission requirement)
@@ -11,18 +11,19 @@ Write-side chain: BSC testnet (97) — every explorer link below is on https://t
 - Agent session key: 0xE94565436Be44f1830044B0eDC606179a8C9de32 (wallet 0xc211C942946011859ca634F22400d80570ED12A5)
 
 ## Counters
-- indexed=12707 probed=483 verifiedLive=6
+- indexed=60907 probed=3358 verifiedLive=17
 
 ## Reference agent registrations (ERC-8004 Identity 0x8004A818BFB912233c491871b3d84c89A494BD9e, chain 97)
 - Winnow Sentinel (health-factor) — agent #2288 — register tx https://testnet.bscscan.com/tx/0x7394ddf4deefd3e445ddbc579d3943c91d7b81ab749d2261625f64f4e8738333
 - Winnow Harvester (yield) — agent #2289 — register tx https://testnet.bscscan.com/tx/0x46a9673bf3ddf92d57a096ec3d6ff76ad32cac85f2d2410b76e5acb6d6f980b6
 - Winnow Ranger (rebalancing) — agent #2290 — register tx https://testnet.bscscan.com/tx/0xef0aa79db88b2928b250787dd480cc8b4b6733b6c32e22cf8e52845d1ae222a0
 - Winnow Gridsmith (grid-trading) — agent #2291 — register tx https://testnet.bscscan.com/tx/0x34f5ec2b3c1aac42eb89ac9450c0273c8e4fc07fd71584ca2ad9aa603780fd19
-- A2A cards served at /api/a2a/{slug} (local grading tonight; deploy phase rewrites a2a_endpoint to the Fly URL and re-probes)
+- A2A cards served at https://winnow-bsc.fly.dev/api/a2a/{slug} (a2a_endpoint rows point at the live deployment; graded via public probes)
 
 ## Attestations
 - [metadata=12] agent#2286 tx https://testnet.bscscan.com/tx/0xa35e384cc957f27ff3cb16f24ab765e0f1a0f1b72ada1ca589e30ec73cb0796b
 - [metadata=7] agent#2287 tx https://testnet.bscscan.com/tx/0x43980a03874ea116c9e6cfd01e3515547ecc3a6c84577ec3eb041ad8faa0d063
+- [liveness=32] agent#2288 tx https://testnet.bscscan.com/tx/0xd09508a9d8efb27b22000e645d7977ad54831f4614647f5ad3df6518f6e22280
 
 ## Sessions (Altana Keystore 0x6b8361C29d05D498b1a12B54A37310f94171E94A — full lifecycle)
 - #1 agent#0 cap=2000000000000000wei expiry=1788933378 status=revoked
