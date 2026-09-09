@@ -61,7 +61,7 @@ Dev suite: `npm run typecheck && npm run test:unit && npm run test:api && npm ru
 
 ## On-chain verification (chain-labeled)
 
-Writes currently run on BSC testnet (chain 97), reads on mainnet (chain 56); every explorer link above is labeled with its chain. The mainnet migration path (re-run registration, attestation, and one real action per agent on chain 56, about $6 of gas) uses the identical code already proven end-to-end on testnet. Altana's bounty explicitly accepts testnet.
+The live app writes on BSC testnet (chain 97) and reads market data on mainnet (chain 56); every explorer link above is labeled with its chain. The same write path is also proven on BSC MAINNET: all four reference agents are registered on the canonical mainnet ERC-8004 Identity registry (ids 342419 to 342422) with a liveness attestation on the mainnet Reputation registry, receipts status 0x1 on bscscan.com, listed in submission/proof.md and submission/mainnet-migration.json. Altana's bounty explicitly accepts testnet, so the deployed demo stays on testnet for zero-cost judging.
 
 ## Stack
 
