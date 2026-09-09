@@ -48,27 +48,32 @@ function loadHandle(sessionRowId: number): StoredHandle {
   return JSON.parse(raw.v);
 }
 
-// Activate = operator smart wallet + activation tx (registers admin key) + grantSession(cap, expiry) to the agent's own key.
+// Activate = operator smart wallet + activation tx (registers admin key) + grantSession(cap, expiry).
+// DEV-304: KeyStore rejects re-registering a public key ("key already registered"), so each grant uses a
+// FRESH session key (correct model for repeat activations); the agent wallet remains the stable identity/target.
 export async function activateAgent(agentName: string, refTokenId: number, capWei: bigint, expiryS: number, allowTo?: `0x${string}`) {
   const { s, altana, operatorSigner } = await sdk();
   const aw = loadOrCreateAgentWallet(agentName);
+  const sessionPk = generatePrivateKey();
   const wallet = await altana.createWallet({ signer: operatorSigner }); // EIP-7702: wallet addr = operator EOA
   await altana.execute({ wallet, signer: operatorSigner, calls: { to: wallet.address as `0x${string}`, value: 0n } }); // activation registers admin key
   const expiry = Math.floor(Date.now() / 1000) + expiryS;
   const grant = await altana.grantSession({
     wallet, signer: operatorSigner,
-    sessionSigner: s.signerFromPrivateKey(aw.pk), // session key = the agent's own key
+    sessionSigner: s.signerFromPrivateKey(sessionPk), // fresh per grant (DEV-304)
     permissions: {
-      calls: allowTo ? [{ to: allowTo }] : undefined, // omit ⇒ all targets; spend cap still binds
-      spend: [{ limit: capWei, period: "day" }],      // native BNB cap (no token field)
+      // Relay enforces explicit call targets for session keys (UnauthorizedCall otherwise, DEV-303):
+      // default scope = the agent's own wallet address; callers may widen via allowTo.
+      calls: [{ to: allowTo ?? (aw.address as `0x${string}`) }],
+      spend: [{ limit: capWei, period: "day" }], // native BNB cap (no token field)
     },
     expiry,
   });
   // [CRITIQUE E-4] persist rowId + session handle ATOMICALLY at grant — revoke()/demonstrateOverCap() read kv session_handle_{id}
   const info = db.prepare("INSERT INTO sessions(agent_chain,agent_token,agent_wallet,session_key,cap_wei,expiry,grant_tx,status) VALUES(?,?,?,?,?,?,?,'live')")
-    .run(A.id, refTokenId, wallet.address, aw.address, capWei.toString(), expiry, grant.transactionHash ?? "onchain");
+    .run(A.id, refTokenId, wallet.address, privateKeyToAccount(sessionPk).address, capWei.toString(), expiry, grant.transactionHash ?? "onchain");
   const sessionId = Number(info.lastInsertRowid);
-  const handle: StoredHandle = { walletAddress: wallet.address as `0x${string}`, stored: s.serializeSession(grant), sessionPk: aw.pk, grantTx: grant.transactionHash };
+  const handle: StoredHandle = { walletAddress: wallet.address as `0x${string}`, stored: s.serializeSession(grant), sessionPk, grantTx: grant.transactionHash };
   db.prepare("INSERT INTO kv(k,v) VALUES(?,?) ON CONFLICT(k) DO UPDATE SET v=excluded.v").run(`session_handle_${sessionId}`, JSON.stringify(handle));
   return { wallet, session: grant, agentWallet: aw, sessionId, grantTx: grant.transactionHash };
 }
@@ -100,8 +105,12 @@ export async function demonstrateOverCap(sessionRowId: number) {
   const row = db.prepare("SELECT * FROM sessions WHERE id=?").get(sessionRowId) as any;
   const session: Session = s.deserializeSession(h.stored, s.signerFromPrivateKey(h.sessionPk));
   const overCap = BigInt(row.cap_wei) * 2n;
+  // Target the session's own ALLOWED call target so the only rejection reason is the SPEND CAP (INVARIANT 5 —
+  // targeting a non-permitted address would revert UnauthorizedCall and prove nothing about the cap).
+  const allowed = (h.stored.permissions.calls?.[0] as any)?.to as `0x${string}` | undefined;
+  if (!allowed) throw new Error("no allowed call target in stored session");
   try {
-    await altana.execute({ session, calls: { to: row.agent_wallet as `0x${string}`, value: overCap } });
+    await altana.execute({ session, calls: { to: allowed, value: overCap } });
     throw new Error("INVARIANT-5 VIOLATION: over-cap execute did NOT revert");
   } catch (e: any) {
     const msg = String(e?.message ?? e);
