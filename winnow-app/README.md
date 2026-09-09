@@ -10,7 +10,7 @@ Built solo for BNB Chain's Build the Era hackathon (Smart Money Era). Judged cri
 
 ## The stats line (all recomputable)
 
-60,907 agents indexed from the BSC registry (growing live, honest counters). 3,358 graded, each grade joined to a raw probe transcript by a NOT NULL foreign key: a grade without evidence cannot exist in the schema. 3 onchain attestations, 5 Altana sessions (grant, in-cap execute, over-cap revert, revoke all proven with receipts), 93 real agent actions with LLM reasoning. Recompute any of it: `npx tsx scripts/verify-claims.ts`.
+60,907 agents indexed from the BSC registry (growing live, honest counters). 3,358 graded, each grade joined to a raw probe transcript by a NOT NULL foreign key: a grade without evidence cannot exist in the schema. 3 onchain attestations, 5 Altana sessions (grant, in-cap execute, over-cap revert, revoke all proven with receipts), 93 real agent actions with LLM reasoning. Recompute any of it against the committed snapshot: `DB_PATH=./seed/winnow-seed.db npx tsx scripts/verify-claims.ts`.
 
 ## How it works
 
@@ -37,7 +37,7 @@ All four serve real A2A agent cards from this app (`/api/a2a/{name}`) and are gr
 Canonical registries on BSC: Identity `0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`, Reputation `0x8004BAa17C55a88189AE136b182e5fdA19dE9b63` (testnet: `0x8004A818BFB912233c491871b3d84c89A494BD9e` / `0x8004B663056A597Dffe9eCcC1965A193B7388713`). Winnow reads the whole corpus and is the registry's write-path too: probe verdicts become `giveFeedback` attestations. Sample receipts (BSC testnet): [`0xa35e384c…`](https://testnet.bscscan.com/tx/0xa35e384cc957f27ff3cb16f24ab765e0f1a0f1b72ada1ca589e30ec73cb0796b), [`0x43980a03…`](https://testnet.bscscan.com/tx/0x43980a03874ea116c9e6cfd01e3515547ecc3a6c84577ec3eb041ad8faa0d063). Own-agent attestations use a second signer (`0x5e6cBAb6C130C21f329209697e050773f72F92c1`) because the spec bars self-feedback.
 
 ### Altana (sessions = the hire button)
-`@altananetwork/sdk` 0.9.0. Activate mints a session with a calls allowlist, a per-day spend cap, and an expiry, enforced onchain by the Keystore (`0x6b8361C29d05D498b1a12B54A37310f94171E94A` testnet). Full lifecycle proven with receipts: grant [`0xb4433aee…`](https://testnet.bscscan.com/tx/0xb4433aeec60c5953), in-cap execute, over-cap attempt reverting with `ExceededSpendLimit`, revoke, and `isValidKey` flipping onchain. A live demo session stays granted. Operator wallet: `0xc211C942946011859ca634F22400d80570ED12A5`.
+`@altananetwork/sdk` 0.9.0. Activate mints a session with a calls allowlist, a per-day spend cap, and an expiry, enforced onchain by the Keystore (`0x6b8361C29d05D498b1a12B54A37310f94171E94A` testnet). Full lifecycle proven with receipts: grant [`0xb4433aee…`](https://testnet.bscscan.com/tx/0xb4433aeec60cbe2f57f570e4217a3aeec6c0cade5bc24da6b978ce3c265f5953), in-cap execute, over-cap attempt reverting with `ExceededSpendLimit`, revoke, and `isValidKey` flipping onchain. A live demo session stays granted. Operator wallet: `0xc211C942946011859ca634F22400d80570ED12A5`.
 
 ### TermiX (prove it beats DIY)
 The [Agent Advantage Report](submission/AGENT-ADVANTAGE-REPORT.md) runs three real tasks both ways (agent vs step-by-step manual execution) with wall-clocked timings, costs, a scoring rubric, and every output attached verbatim. One is a trading task with a window label, calibration framing, and a risk statement. The candid finding: on raw seconds the scripted manual path wins two tasks; the agent's provable advantage is cost per decision and 24/7 cadence, and the report says exactly that instead of inventing a multiplier.
@@ -59,7 +59,7 @@ Dev suite: `npm run typecheck && npm run test:unit && npm run test:api && npm ru
 
 ## On-chain verification (chain-labeled)
 
-Writes currently run on BSC testnet (chain 97), reads on mainnet (chain 56); every explorer link above is labeled with its chain. The mainnet runbook (`scripts/mainnet-runbook.ts`) migrates registrations, attestations, and one real action per agent to chain 56 with about $6 of gas: the code path is identical and already proven end-to-end on testnet. Altana's bounty explicitly accepts testnet.
+Writes currently run on BSC testnet (chain 97), reads on mainnet (chain 56); every explorer link above is labeled with its chain. The mainnet migration path (re-run registration, attestation, and one real action per agent on chain 56, about $6 of gas) uses the identical code already proven end-to-end on testnet. Altana's bounty explicitly accepts testnet.
 
 ## Stack
 

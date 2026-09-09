@@ -23,7 +23,7 @@ ${ses.map((s) => `- Agent session key: ${s.session_key} (wallet ${s.agent_wallet
 
 ## Reference agent registrations (ERC-8004 Identity ${A.identity}, chain ${A.id})
 ${refs.map((r) => `- ${r.name} (${r.category}) — agent #${r.tokenId} — register tx ${ex}/tx/${r.registerTx}`).join("\n")}
-- A2A cards served at https://winnow-bsc.fly.dev/api/a2a/{slug} (a2a_endpoint rows point at the live deployment; graded via public probes)
+- A2A cards served at https://winnow-bsc.onrender.com/api/a2a/{slug} (a2a_endpoint rows point at the live deployment; graded via public probes)
 
 ## Attestations
 ${att.map((t) => `- [${t.tag}=${t.value}] agent#${t.token_id} tx ${ex}/tx/${t.tx_hash}`).join("\n")}

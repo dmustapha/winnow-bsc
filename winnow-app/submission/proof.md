@@ -18,7 +18,7 @@ Write-side chain: BSC testnet (97) — every explorer link below is on https://t
 - Winnow Harvester (yield) — agent #2289 — register tx https://testnet.bscscan.com/tx/0x46a9673bf3ddf92d57a096ec3d6ff76ad32cac85f2d2410b76e5acb6d6f980b6
 - Winnow Ranger (rebalancing) — agent #2290 — register tx https://testnet.bscscan.com/tx/0xef0aa79db88b2928b250787dd480cc8b4b6733b6c32e22cf8e52845d1ae222a0
 - Winnow Gridsmith (grid-trading) — agent #2291 — register tx https://testnet.bscscan.com/tx/0x34f5ec2b3c1aac42eb89ac9450c0273c8e4fc07fd71584ca2ad9aa603780fd19
-- A2A cards served at https://winnow-bsc.fly.dev/api/a2a/{slug} (a2a_endpoint rows point at the live deployment; graded via public probes)
+- A2A cards served at https://winnow-bsc.onrender.com/api/a2a/{slug} (a2a_endpoint rows point at the live deployment; graded via public probes)
 
 ## Attestations
 - [metadata=12] agent#2286 tx https://testnet.bscscan.com/tx/0xa35e384cc957f27ff3cb16f24ab765e0f1a0f1b72ada1ca589e30ec73cb0796b
