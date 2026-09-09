@@ -1,8 +1,8 @@
-# SECURITY — Winnow custody & write-safety model
+# SECURITY: Winnow custody and write-safety model
 
 ## Key custody
 - **Operator key** (`EVM_PRIVATE_KEY`, 0xc211C942946011859ca634F22400d80570ED12A5): lives ONLY in Render environment variables (prod) or a local untracked `.env` (dev). Never committed, never sent to the browser, never printed in logs.
-- **Agent session keys**: generated at seed time, capped (`cap_wei`) and expiring (`expiry`) via the Altana Keystore — enforcement is onchain (`isValidKey`), not a UI label. Revoke is one transaction.
+- **Agent session keys**: generated at seed time, capped (`cap_wei`) and expiring (`expiry`) via the Altana Keystore. Enforcement is onchain (`isValidKey`), not a UI label. Revoke is one transaction.
 - **Optional second attestor key** (`ATTESTOR2_PRIVATE_KEY`): same handling as operator key.
 - No wallet-connect wall for judges: activation uses a server-held demo-operator wallet, rate-limited, tiny caps (D-10).
 
@@ -15,6 +15,6 @@ Sessions are granted from a single operator EIP-7702 smart wallet; each referenc
 
 ## App-layer safety (ARCH §20)
 - L1: zod validation on every API input.
-- L2: rate limits — re-probe 20s/agent, activate 60s global, 8004scan pacer 30/min + 900/day budget.
-- L3: circuit breakers — RPC fallback transport, scan budget guard, LLM-absent → skip-and-log (never fabricate).
-- L4: graceful degradation — stale-cache banners, category empty-states, probe timeout = honest verdict.
+- L2: rate limits: re-probe 20s/agent, activate 60s global, 8004scan pacer 30/min + 900/day budget.
+- L3: circuit breakers: RPC fallback transport, scan budget guard, LLM-absent → skip-and-log (never fabricate).
+- L4: graceful degradation: stale-cache banners, category empty-states, probe timeout = honest verdict.

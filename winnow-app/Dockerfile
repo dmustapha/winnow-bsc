@@ -12,6 +12,7 @@ WORKDIR /app
 ENV NODE_ENV=production PORT=3000 DB_PATH=/app/data/winnow.db
 COPY --from=build /app/.next/standalone ./
 COPY --from=build /app/.next/static ./.next/static
+COPY --from=build /app/public ./public
 COPY --from=build /app/node_modules/better-sqlite3 ./node_modules/better-sqlite3
 COPY --from=build /app/scripts ./scripts
 COPY --from=build /app/node_modules/tsx ./node_modules/tsx

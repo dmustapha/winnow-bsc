@@ -10,7 +10,7 @@ const acts = db.prepare("SELECT * FROM agent_actions WHERE tx_hash IS NOT NULL")
 const refs = JSON.parse(kvGet("reference_agents") ?? "[]") as { name: string; tokenId: number; category: string; registerTx: string }[];
 const c = (q: string) => (db.prepare(q).get() as any).c;
 const ex = A.explorer;
-const md = `# Winnow — Proof
+const md = `# Winnow Proof
 Generated ${new Date().toISOString()}
 Write-side chain: ${A.id === 97 ? "BSC testnet (97)" : "BSC mainnet (56)"} — every explorer link below is on ${ex}. Market-data reads are BSC mainnet.
 
@@ -22,18 +22,18 @@ ${ses.map((s) => `- Agent session key: ${s.session_key} (wallet ${s.agent_wallet
 - indexed=${c("SELECT COUNT(*) c FROM agents")} probed=${c("SELECT COUNT(*) c FROM grades")} verifiedLive=${c("SELECT COUNT(*) c FROM probe_logs WHERE liveness>0")}
 
 ## Reference agent registrations (ERC-8004 Identity ${A.identity}, chain ${A.id})
-${refs.map((r) => `- ${r.name} (${r.category}) — agent #${r.tokenId} — register tx ${ex}/tx/${r.registerTx}`).join("\n")}
+${refs.map((r) => `- ${r.name} (${r.category}): agent #${r.tokenId}, register tx ${ex}/tx/${r.registerTx}`).join("\n")}
 - A2A cards served at https://winnow-bsc.onrender.com/api/a2a/{slug} (a2a_endpoint rows point at the live deployment; graded via public probes)
 
 ## Attestations
 ${att.map((t) => `- [${t.tag}=${t.value}] agent#${t.token_id} tx ${ex}/tx/${t.tx_hash}`).join("\n")}
 
-## Sessions (Altana Keystore ${A.keystore} — full lifecycle)
+## Sessions (Altana Keystore ${A.keystore} | full lifecycle)
 ${ses.map((s) => `- #${s.id} agent#${s.agent_token} cap=${s.cap_wei}wei expiry=${s.expiry} status=${s.status}\n  - grant ${ex}/tx/${s.grant_tx}${s.revoke_tx ? `\n  - revoke ${ex}/tx/${s.revoke_tx}` : ""}`).join("\n")}
 
 ## Session lifecycle receipts (INVARIANT 5)
 - In-cap execute (session #4 path, 0.0001 BNB signed by the session key, inside the cap): ${ex}/tx/0xe22694b915ac1ef35f4028cc52f4fe7c7f634dd30b69581839fed97386d28b10 (receipt status 0x1)
-- Over-cap attempt: rejected with \`ExceededSpendLimit\` before any transaction lands — the absence of a tx IS the enforcement evidence. Recompute live: \`RUN_LIVE=1 npx tsx tests/falsify/overcap-live.test.ts\` (60s cooldown).
+- Over-cap attempt: rejected with \`ExceededSpendLimit\` before any transaction lands; the absence of a tx IS the enforcement evidence. Recompute live: \`RUN_LIVE=1 npx tsx tests/falsify/overcap-live.test.ts\` (60s cooldown).
 
 ## Agent action txs
 ${acts.map((a) => `- ${a.kind} ${ex}/tx/${a.tx_hash}`).join("\n")}

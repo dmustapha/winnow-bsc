@@ -65,7 +65,7 @@ Writes currently run on BSC testnet (chain 97), reads on mainnet (chain 56); eve
 
 ## Stack
 
-Next.js 14 (App Router) · better-sqlite3 · viem · `@altananetwork/sdk` 0.9.0 · Anthropic (agent reasoning) · Docker on Render. No custom contracts: Winnow composes the canonical ERC-8004 registries and the Altana Keystore, which is the point — anything it writes, every other agent app can read.
+Next.js 14 (App Router) · better-sqlite3 · viem · `@altananetwork/sdk` 0.9.0 · Anthropic (agent reasoning) · Docker on Render. No custom contracts: Winnow composes the canonical ERC-8004 registries and the Altana Keystore, which is the point: anything it writes, every other agent app can read.
 
 ## Honesty ledger
 
