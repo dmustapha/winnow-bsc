@@ -342,3 +342,41 @@
 #### For Next Skill
 - stress_test: new surfaces = /api/stats gradedByCat map, Counter component, grade meters, session time-remaining meter, /c/[cat]/loading.tsx.
 - deploy: brand.json + DESIGN_SYSTEM.md live in winnow-app/ for demo-video/README consumption; screenshots/ has fresh 1440px captures of all 4 pages.
+
+### stress_test — 2026-09-09T08:08Z
+
+#### Done
+- RESUME run (pre-crash session left plan + fixes c0e1ffd/e03ce37 but zero recorded evidence) — full 19-test matrix re-executed live: 65 checks, 65 PASS, 0 unresolved. **Confidence 92/100 (Battle-tested).** STRESS-TEST-REPORT.md + .stress-test-state.json written; new commit 9168e15 (falsification test).
+- 43-case adversarial API battery: zero 500s across all routes (malformed/overflow/NaN/huge/non-JSON -> 400, SQLi/XSS/LIKE-inject safe, page bounds 400, a2a traversal 404, wrong method 405). Ghost ids -> honest 404s.
+- Race + load: parallel reprobes -> one live grade C/59 + one 429; 20-concurrent /api/agents all 200 <=0.14s. WAL + integrity ok, gradesWithoutAgent=0, verify-claims exit 0 throughout.
+- ST-WORK-1 kill -9: worker runs EMBEDDED in next-server (src/instrumentation.ts startWorker()). Killed live holder -> standalone run-worker.mts took over stale pidfile (signal-0 detection), grading resumed (2958->2983), no dup rows; server restart -> 200. Full crash recovery proven.
+- Overcap-demo session 5: ExceededSpendLimit on-chain revert 2.5s, repeat -> 429, ghost session -> 404. **Session 5 untouched and still valid.**
+- Phase 8.5: feed-a-lie test committed (tests/falsify/garbage-endpoint.test.ts — dead agent grades F/17, asserts red on lying grader); ablation no-op of letterFor broke suite (exit 1 'A'=='B') then reverted clean. Suite is falsifiable, not hollow.
+- Debug handoff rows (3, Owner=stress_test) all covered per plan table; critique elevations E-1..E-4 re-verified (E-5 sanctioned deferral).
+
+#### Additions
+- [NEW] winnow-app/tests/falsify/garbage-endpoint.test.ts (commit 9168e15) — permanent honesty regression test.
+
+#### Deviations
+- [AUTO] Declared OUT_OF_SLICE per plan (time box): 5-viewport visual, full a11y, slow-3G, Playwright journeys, localStorage corruption, live activate (burns grant), live revoke (session 5 demo-critical), LLM cost-blowup live. -8 score.
+- [SKILL] ST-REG first pass self-interfered: concurrent `next build` clobbered dev-server .next (transient 404/500 + TS6053 ghosts). Not a code bug — clean re-run passed. Lesson: never run `next build` against a live dev server's tree.
+- [AUTO] Report kept at canonical name STRESS-TEST-REPORT.md (dispatch said "STRESS-REPORT.md").
+
+#### Verified Facts
+- [2026-09-09T07:59Z] All 4 POST routes reject every malformed-body class with 400, never 500 | evidence: /tmp battery output, 43/43 ok
+- [2026-09-09T08:02Z] Worker pidfile lock: refuses 2nd instance while holder alive; takes over stale pid after kill -9 | evidence: pidfile 48350->51179, /tmp/st-worker3.log
+- [2026-09-09T08:01Z] Dead-endpoint agent grades F/17 with liveness 0 (honest grading headline holds under falsification) | evidence: falsify test PASS
+- [2026-09-09T08:05Z] Unit suite breaks when grading core is no-oped (ablation exit 1) and passes after revert | evidence: /tmp/st-ablation.log
+
+#### Assumptions
+- [ASSUMED] Embedded-worker grading cadence in production mirrors dev behavior (instrumentation.ts fires in `next start` too) — deploy should confirm one grading tick post-deploy.
+
+#### Blockers for Downstream
+- None.
+
+#### Key Decisions
+- [AUTO] No new fix commits needed — pre-crash fixes hold across full re-run; only test-artifact commit added.
+
+#### For Next Skill
+- deploy: keep ONE server process alive (worker is embedded via instrumentation.ts); stale data/worker.pid after crash is self-healing via signal-0 takeover. Confirm a grading tick post-deploy (Assumption above). V-1/W-1/DH-2/D-1 rows still yours.
+- demo_rehearsal: cooldowns — reprobe 20s/agent, overcap 60s/session, activate 60s global; reprobe ~2-7s live; overcap revert ~2.5s. Session 5 valid, do NOT revoke.

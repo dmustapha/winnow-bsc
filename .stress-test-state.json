@@ -1,0 +1,109 @@
+{
+  "status": "complete",
+  "working_dir": "/Users/MAC/bnb-smart-money",
+  "autonomous_mode": true,
+  "context_percentage": 45,
+  "timestamp": "2026-09-09T08:05:00Z",
+
+  "confidenceScore": 92,
+
+  "falsificationTests": [
+    { "claim": "Winnow grades honestly — a dead-endpoint agent cannot earn a passing liveness grade", "test": "winnow-app/tests/falsify/garbage-endpoint.test.ts", "assertRed": true },
+    { "claim": "Session spend caps are enforced on-chain — over-cap spend reverts", "test": "live: POST /api/overcap-demo sessionId 5 -> ExceededSpendLimit revert (2.5s), repeat -> 429; not a repo test file (burns a live tx per run, 60s cooldown)", "assertRed": true },
+    { "claim": "Attestor never fakes attestations", "test": "winnow-app/tests/unit/attestor-guards.test.ts", "assertRed": true }
+  ],
+  "ablationCheck": { "performed": true, "module": "winnow-app/src/lib/grade.ts (letterFor no-oped to always-A)", "suiteBrokeWhenNooped": true, "evidence": "/tmp/st-ablation.log — exit 1, AssertionError 'A' == 'B'; reverted, post-revert suite exit 0" },
+  "abstention": { "sentinelsUsed": true, "note": "OUT_OF_SLICE: 5-viewport visual, full a11y, slow-3G emulation, Playwright journeys, localStorage corruption, live activate (burns grant), live revoke (session 5 demo-critical), LLM cost-blowup live. All declared in plan; none silently passed." },
+
+  "test_summary": {
+    "total_tests": 65,
+    "passed": 65,
+    "failed": 0,
+    "fixed": 0,
+    "skipped": 8,
+    "unresolved": 0
+  },
+
+  "unresolved_bugs": [],
+
+  "fixes_applied": [
+    { "id": "ST-API-1/4", "file": "winnow-app/src/app/api/{reprobe,activate,revoke,overcap-demo}/route.ts", "description": "commit c0e1ffd (pre-crash fix round): 4xx-not-500 on ghost ids, int bounds on POST bodies, gradesWithoutAgent invariant", "verified": true },
+    { "id": "ST-API-3", "file": "winnow-app/src/app/api/agents/route.ts", "description": "commit e03ce37 (pre-crash fix round): bound page param — 1e308*30 offset crashed sqlite binding with 500", "verified": true },
+    { "id": "ST-FALSIFY", "file": "winnow-app/tests/falsify/garbage-endpoint.test.ts", "description": "commit 9168e15: new feed-a-lie test, dead agent must grade F (graded F/17 live)", "verified": true }
+  ],
+
+  "critique_checkpoint": {
+    "elevations_checked": 5,
+    "elevations_verified": 4,
+    "elevations_implemented": 0,
+    "gaps": ["E-5 ERC-8183 hire path — sanctioned deferral (not approved), no action"]
+  },
+
+  "dev_server": {
+    "port": 3000,
+    "started_at": "2026-09-09T07:52:00Z",
+    "healthy": true,
+    "killed_on_exit": true,
+    "note": "worker runs EMBEDDED in next-server via src/instrumentation.ts startWorker() — killing the server stops grading; deploy must run the server (or scripts/run-worker.mts) continuously"
+  },
+
+  "screenshot_paths": [],
+
+  "plan_path": "STRESS-TEST-PLAN.md",
+  "report_path": "STRESS-TEST-REPORT.md",
+
+  "phase": {
+    "setup": "complete",
+    "plan": "complete",
+    "frontend_journey": "complete",
+    "end_to_end_flows": "complete",
+    "frontend_visual": "skipped",
+    "backend_api": "complete",
+    "contract": "complete",
+    "ai_agent_failure_modes": "complete",
+    "state_data": "complete",
+    "network_timing": "complete",
+    "recovery": "complete",
+    "fix_round": "complete"
+  },
+
+  "phase_ledger": [
+    { "phase": "setup", "started_at": "2026-09-09T07:40:00Z", "completed_at": "2026-09-09T07:53:00Z", "evidence": "dev server restarted clean (PID file /tmp/st-dev.pid) after concurrent-build clobber; / -> 200 0.05s; pipeline-log START appended" },
+    { "phase": "plan", "started_at": "2026-09-09T06:56:00Z", "completed_at": "2026-09-09T06:56:00Z", "evidence": "STRESS-TEST-PLAN.md written by pre-crash run (07:10Z header), 19-test matrix + debug-handoff coverage table + declared P2 skips; reused unmodified this resume" },
+    { "phase": "frontend_journey", "started_at": "2026-09-09T07:54:00Z", "completed_at": "2026-09-09T07:56:00Z", "evidence": "ST-REG-3: / /c/health-factor /agent/56/49637 /proof all 200 (<0.4s); error paths: reprobe 429 cooldown, ghost agent 404, overcap 429 — all honest recoverable errors; Playwright journeys OUT_OF_SLICE per plan" },
+    { "phase": "end_to_end_flows", "started_at": "2026-09-09T07:56:00Z", "completed_at": "2026-09-09T07:58:00Z", "evidence": "reprobe flow e2e: POST -> live probe -> grade C/59 probeLogId 2856 in 2.17s -> persisted (grades row probe_log_id=2856 confirmed via sqlite); worker flow via recovery phase; both sync-await, no jobId polling flows" },
+    { "phase": "frontend_visual", "started_at": "2026-09-09T07:58:00Z", "completed_at": "2026-09-09T07:58:00Z", "evidence": "SKIPPED (declared in plan): design_forge captured fresh 1440px screenshots of all 4 pages same day + craft audit 0 violations; 5-viewport sweep OUT_OF_SLICE under time box" },
+    { "phase": "backend_api", "started_at": "2026-09-09T07:54:00Z", "completed_at": "2026-09-09T07:59:00Z", "evidence": "43-case adversarial battery (/tmp/st-api.sh): 0 500s — malformed/negative/overflow/NaN/huge/non-JSON -> 400, wrong method -> 405, SQLi+XSS+LIKE-inject q/cat -> 200 safe, page bounds -> 400, a2a traversal -> 404; ghost reprobe 404; race: parallel reprobes -> 200 + 429; 20-concurrent load all 200 <=0.14s" },
+    { "phase": "contract", "started_at": "2026-09-09T07:57:00Z", "completed_at": "2026-09-09T07:58:00Z", "evidence": "overcap-demo session 5: on-chain ExceededSpendLimit revert (2.5s, session stays valid), immediate repeat 429, ghost session 404; live activate/revoke tx OUT_OF_SLICE (burns grant / session 5 untouchable per directive)" },
+    { "phase": "ai_agent_failure_modes", "started_at": "2026-09-09T07:59:00Z", "completed_at": "2026-09-09T08:01:00Z", "evidence": "ST-PROBE-1 garbage endpoint -> honest F/17 in 16ms, rows cleaned, 0 orphan grades; ST-PROBE-2 timeout: AbortSignal.timeout(6000) both fetch paths in probe.ts + debug's 6001ms live record; injection via ?q= clean; cost-blowup bounded by single-tick prober (LIMIT 1) + fastgrader zero-network lane, live test OUT_OF_SLICE" },
+    { "phase": "state_data", "started_at": "2026-09-09T07:58:00Z", "completed_at": "2026-09-09T08:00:00Z", "evidence": "PRAGMA journal_mode=wal, integrity_check=ok (x3 during run), gradesWithoutAgent=0, orphan probe_log refs=0, verify-claims exit 0; localStorage corruption OUT_OF_SLICE (no client persistence layer)" },
+    { "phase": "network_timing", "started_at": "2026-09-09T08:00:00Z", "completed_at": "2026-09-09T08:00:00Z", "evidence": "per-check probe timeout 6000ms verified in code (probe.ts:21,25) + debug live record 6001ms; race conditions covered by ST-API-5 (429) and 20-concurrent load; slow-3G emulation OUT_OF_SLICE per plan" },
+    { "phase": "recovery", "started_at": "2026-09-09T08:00:00Z", "completed_at": "2026-09-09T08:03:00Z", "evidence": "ST-WORK-1: lock refusal while holder alive (2 instances refused); kill -9 live holder (embedded worker in next-server 48350) -> stale-pid takeover by fresh worker (pidfile 48350->51179), grades monotonic 2958->2983, integrity ok, 0 dup PKs, 0 orphans; full crash recovery: app 000 -> restart -> 200; verify-claims exit 0" },
+    { "phase": "fix_round", "started_at": "2026-09-09T08:03:00Z", "completed_at": "2026-09-09T08:06:00Z", "evidence": "0 new bugs this resume (pre-crash commits c0e1ffd+e03ce37 hold across full battery re-run); Phase 8.5: falsification test committed 9168e15 (passes: F/17), ablation letterFor no-op -> suite exit 1 'A'=='B' -> reverted -> exit 0; critique checkpoint E-1..E-4 verified (E-1 grep+counters, E-2 fastgrader observed grading live, E-4 session handle lookup proven by ghost-404), E-5 sanctioned deferral" }
+  ],
+
+  "async_flow_results": [
+    {
+      "flow_name": "reprobe live grade (sync-await)",
+      "triggered_at": "2026-09-09T07:56:30Z",
+      "completed_at": "2026-09-09T07:56:32Z",
+      "wall_clock_seconds": 2.17,
+      "expected_seconds": 15,
+      "events_received": { "grade_response": 1, "probe_checks": 4 },
+      "events_missing": [],
+      "final_state_verified": true,
+      "result": "PASS"
+    },
+    {
+      "flow_name": "worker background grading",
+      "triggered_at": "2026-09-09T08:00:00Z",
+      "completed_at": "2026-09-09T08:02:00Z",
+      "wall_clock_seconds": 18,
+      "expected_seconds": 30,
+      "events_received": { "grades_written": 25 },
+      "events_missing": [],
+      "final_state_verified": true,
+      "result": "PASS"
+    }
+  ]
+}
