@@ -1,5 +1,5 @@
 {
-  "phase": "critique",
-  "conductor_state_checksum": "cc8a5dc84da7d744036d1ae913a482dac18ded956f2a77c08a6f6bca41898569",
-  "captured_at": "2026-09-09T03:24:28Z"
+  "phase": "url_preverify",
+  "conductor_state_checksum": "caf19ae8baba1002b01ee94d6e6ac531b73aaf214e86978b11f996fc82bd3ccd",
+  "captured_at": "2026-09-09T03:33:10Z"
 }

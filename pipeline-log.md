@@ -23,3 +23,5 @@ Inputs: winnow/{PRD,ARCHITECTURE,PLAN,INVARIANTS}.md, warroom/WINNER-BRIEF.md, r
 2026-09-09T03:33:00Z | conductor | CHECKPOINT | cp3 | [AUTO] answered — 0 gating rows
 2026-09-09T03:33:10Z | url_preverify | START | url_preverify | Dispatching url_preverify
 2026-09-09T03:34:03Z | url_preverify | COMPLETE | inline | 10/10 URLs verified (venus transient retry)
+2026-09-09T03:34:08Z | build | START | build | Dispatching build
+2026-09-09T03:34:47Z | hackathon-build | START | C0 | orchestrator init

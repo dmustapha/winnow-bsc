@@ -98,7 +98,8 @@
         "verdict": "pass"
       },
       "build": {
-        "status": "pending"
+        "status": "running",
+        "dispatched_at": "2026-09-09T03:34:08Z"
       },
       "debug": {
         "status": "pending"
