@@ -12,6 +12,10 @@ export async function POST(req: Request) {
   lastActivate = Date.now();
   try {
     const r = await activateAgent(p.data.agentName, p.data.tokenId, parseEther(String(p.data.capBnb)), p.data.hours * 3600);
-    return NextResponse.json({ ok: true, wallet: r.wallet.address, sessionKey: r.agentWallet.address });
-  } catch (e: any) { return NextResponse.json({ error: String(e?.message).slice(0, 200) }, { status: 500 }); }
+    // DEBUG FIX (P5): honest labels — r.agentWallet is the agent's wallet, not the session key
+    return NextResponse.json({ ok: true, sessionId: r.sessionId, wallet: r.wallet.address, agentWallet: r.agentWallet.address, grantTx: r.grantTx });
+  } catch (e: any) {
+    lastActivate = 0; // DEBUG FIX (P5): a failed activation must not burn the 60s cooldown
+    return NextResponse.json({ error: String(e?.message).slice(0, 200) }, { status: 500 });
+  }
 }

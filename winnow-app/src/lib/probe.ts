@@ -26,7 +26,7 @@ export async function runProbe(chainId: number, tokenId: number) {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const j = await r.json(); return `card ok: ${j?.name ?? "unnamed"}`;
   }));
-  if (!a?.mcp_server && !a?.a2a_endpoint) checks.push({ name: "endpoints", ok: false, ms: 0, detail: "no declared endpoint (the 96% case)" });
+  if (!a?.mcp_server && !a?.a2a_endpoint) checks.push({ name: "endpoints", ok: false, ms: 0, detail: "no declared MCP or A2A endpoint" });
   // scoring
   const liveOk = checks.some((c) => (c.name === "mcp_initialize" || c.name === "a2a_card") && c.ok);
   const liveness = liveOk ? (checks.filter((c) => c.ok).length > 1 ? 40 : 32) : 0;
@@ -49,7 +49,10 @@ function feedbackScore(a: any): { feedback: number; fbDetail: string } {
                    : { feedback: 6, fbDetail: `n=${n} avg=${s} outside plausible range (uniform or extreme volume) — insufficient independently-validated feedback` };
 }
 function trackScore(chainId: number, tokenId: number): number {
-  const acts = db.prepare("SELECT COUNT(*) c FROM agent_actions WHERE agent_token=?").get(tokenId) as any;
+  // DEBUG FIX (P5 M1 class): agent_actions is keyed by token only — count it solely for our
+  // reference agents so a marketplace agent with a colliding token_id never inherits track points.
+  const isRef = (db.prepare("SELECT is_reference r FROM agents WHERE chain_id=? AND token_id=?").get(chainId, tokenId) as any)?.r ?? 0;
+  const acts = isRef ? db.prepare("SELECT COUNT(*) c FROM agent_actions WHERE agent_token=?").get(tokenId) as any : { c: 0 };
   const att = db.prepare("SELECT COUNT(*) c FROM attestations WHERE chain_id=? AND token_id=?").get(chainId, tokenId) as any;
   return Math.min(15, (acts?.c ?? 0) * 3 + (att?.c ?? 0) * 2);
 }

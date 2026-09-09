@@ -14,6 +14,14 @@
 |----|-----------|-------------|:---:|------|-----------|:------:|
 | D-2 | forge | package | MED | PRD.md has 37 em-dash/voice-pattern hits (internal doc) — ensure ZERO banned patterns in user-facing copy (README, submission description, demo VO) per Dami no-em-dash rule | grep -c em-dash on shipped copy = 0 | open |
 | D-1 | warroom | deploy | HIGH | Fund 0xc211C942946011859ca634F22400d80570ED12A5 with ~0.01 BNB on BSC mainnet (Dami, morning) then run mainnet attestation+session runbook | mainnet txs visible on BscScan + Altana explorer | open |
+| DH-1 | debug | wire | P1 | KNOWN-RISKS handoff: DEV-302/502 — all API keys credit-dry; local runs use `claude -p` CLI (proven live in debug); Fly has no CLI | wire proves a working LLM provider on the deploy host (funded key or AltLLM) OR verifies skip-and-log path + honest banner renders | open |
+| DH-2 | debug | wire | P1 | KNOWN-RISKS handoff: reference agents' a2a_endpoints point at localhost:3000 (testnet ids 2288-2291) — dead from any public URL | deploy rewrites endpoints to Fly URL + scripts/regrade-refs.mts re-probes; wire proves cards reachable publicly and grades stay honest (C, not F) | open |
+| DH-3 | debug | verify_milestone | P1 | KNOWN-RISKS handoff (from critique): "testnet-first vs LIVE on BSC" eligibility drift — recheck demo-path chain labels after DT-2 mainnet runbook runs (or doesn't) | demo path shows honest chain labels; if unfunded at 10:30 UTC, submit-as-is branch documented | open |
+| DH-4 | debug | stress_test | P2 | KNOWN-RISKS handoff: test:source ratio 0.13 (5 aggregate test files / 39 sources) — edge/boundary coverage thin (grade formula bounds, probe malformed responses, api fuzz) | stress plan covers grade/probe/api edge classes; failures triaged | open |
+| DH-5 | debug | stress_test | P2 | AI-agent edge classes (AgentAuditor): infinite loop, tool hallucination, cost blowup (LLM tick every 120s ×4 agents), prompt injection via external market-data strings, concurrent state, context overflow, per-instance config isolation | stress executes each class against worker strategies + reason() fallback chain | open |
+| DH-6 | debug | wire | P2 | KNOWN-RISKS handoff: paced() retry-once proven via stubbed fetch only (deterministic 5xx not triggerable on demand) | wire observes real 8004scan calls under live budget (indexer ticking, budget counter sane, no double-burn) | open |
+| DH-7 | debug | stress_test | P3 | Duplicate-name agent floods (e.g. "Ave.ai Trading Agent" ×100+ graded F fills search pages) — ranking/search behavior under name spam | search for a flooded name still surfaces distinct agents; no page dead-ends | open |
+| DH-8 | debug | verify_milestone | P2 | Landing counter honesty: withEndpoints=5 while index at 19,307/310K and growing — ensure copy never implies full-registry endpoint coverage | counters + copy consistent with MUST-NOT-CLAIM rows at demo time | open |
 
 ## Skill Sections
 
@@ -145,6 +153,36 @@
 #### For Next Skill
 - build: PLAN.md updated in place — new gate items: T2.1 zero-scan-call re-probe check, T3.2 fastgrader lane (+100 probed during 5-min run), GATE C3 kv session_handle_{id} exists post-activation, T4.2 grep "grade all" = 0, GATE C5 TermiX rubric fields. ARCH §7/§10/§12/§14 changed — copy the UPDATED code. E-5 is the only sanctioned stretch item.
 - verify_milestone: recheck drift item "testnet-first vs LIVE on BSC" after DT-2 runs (or doesn't).
+
+### debug — 2026-09-09T06:45Z
+
+#### Done
+- Full 6-phase gate, autonomous. Baseline green (1 TEST-BUG fixed: INVARIANT-3 assertion made data-robust). 7 KNOWN-RISKS dispositioned; all PLAN TEST MATRIX rows executed incl. live overcap (session 5 intact) + real dead-endpoint probe. Security: 0 CRIT/HIGH, 1 MED fixed (revoke rate limit). Senior critique 5 MUST-FIX → 4 fixed + 1 delegated (DH-2); 5 SHOULD-FIX fixed. Confidence **90**, PROCEED. 2 commits.
+
+#### Additions
+- [NEW] Fixes landed: paced() retry-once (DEV-006, 4-check test); gridTick "Risk:" line (DEV-503, verified via live `claude -p` tick); worker single-instance pidfile lock w/ stale-pid takeover (C3, kill -9 test); farm-pattern wording → "insufficient independently-validated feedback" + 2 honest re-probes (0 old-wording grades remain); detail-route chain-collision filters (actions/sessions/trackScore); prober lane now covers a2a-only agents; overcap only records SpendLimit-class reverts as proof; activate cooldown not burned on failure + honest response labels; detail-page break-words + cap shown in BNB; landing "Most are shells." → "Most never answer a probe.".
+- [NEW] INVARIANT 5 witnessed live in debug: overcap-demo on session 5 → ExceededSpendLimit revert, session NOT revoked.
+
+#### Deviations
+- [SKILL] paced() retry proven via stubbed fetch (deterministic 5xx untriggerable) — real-path to wire (DH-6).
+- [SKILL] Remaining SHOULD-FIX (next/link, Safari date parse) + NOTEs deferred under time pressure — in critique files.
+
+#### Verified Facts
+- Index grew 19,307→28,007 / probed 758→1,333 during debug (F-001 witnessed); verify-claims orphans 0, negatives 0 throughout.
+- AC-1: 8/8 pages 200 cold, no wallet. AC-2: reprobe 2.3s. `.env` NOT git-tracked (verified ls-files -s + history).
+
+#### Assumptions
+- [ASSUMED] Demo recording runs against localhost OR post-rewrite Fly URL — reference agents' a2a endpoints are localhost-bound until deploy runs regrade-refs (DH-2, P1).
+
+#### Blockers for Downstream
+- None hard. D-1 (mainnet BNB) + D-3 (funded LLM key for Fly) remain morning items.
+
+#### Key Decisions
+- [AUTO] M2 (localhost a2a endpoints) delegated not patched — correct fix is deploy-time URL rewrite + re-probe; localhost recording works today.
+
+#### For Next Skill
+- wire: action DH-1/DH-2/DH-6 (P1s first). Session 5 live for demos — do NOT revoke it; overcap-demo has 60s/session cooldown, revoke now 10s cooldown. Worker pidfile lock means only ONE worker (Next instrumentation) — run-worker.mts will refuse while the server runs (by design).
+- verify_milestone: DH-3 chain-label drift + DH-8 counter honesty; activate response shape changed (sessionId/wallet/agentWallet/grantTx) — update any consumer expectations.
 
 ## Cross-Review
 

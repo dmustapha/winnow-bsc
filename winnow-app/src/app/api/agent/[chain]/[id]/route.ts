@@ -9,7 +9,11 @@ export function GET(_: Request, { params }: { params: { chain: string; id: strin
   if (!agent) return NextResponse.json({ error: "not indexed" }, { status: 404 });
   const grade = db.prepare("SELECT g.*, p.transcript, p.liveness, p.meta, p.feedback, p.track, p.ran_at FROM grades g JOIN probe_logs p ON p.id=g.probe_log_id WHERE g.chain_id=? AND g.token_id=?").get(chain, id);
   const attests = db.prepare("SELECT * FROM attestations WHERE chain_id=? AND token_id=? ORDER BY id DESC LIMIT 10").all(chain, id);
-  const actions = db.prepare("SELECT * FROM agent_actions WHERE agent_token=? ORDER BY id DESC LIMIT 20").all(id);
-  const sessions = db.prepare("SELECT * FROM sessions WHERE agent_token=? ORDER BY id DESC LIMIT 5").all(id);
+  // DEBUG FIX (P5 M1): agent_actions/sessions are keyed by token_id only — gate on is_reference /
+  // filter by chain so a chain-56 agent never shows a chain-97 reference agent's activity.
+  const actions = (agent as any).is_reference
+    ? db.prepare("SELECT * FROM agent_actions WHERE agent_token=? ORDER BY id DESC LIMIT 20").all(id)
+    : [];
+  const sessions = db.prepare("SELECT * FROM sessions WHERE agent_token=? AND agent_chain=? ORDER BY id DESC LIMIT 5").all(id, chain);
   return NextResponse.json({ agent, grade, attests, actions, sessions });
 }

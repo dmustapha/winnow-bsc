@@ -115,6 +115,10 @@ export async function demonstrateOverCap(sessionRowId: number) {
   } catch (e: any) {
     const msg = String(e?.message ?? e);
     if (msg.includes("VIOLATION")) throw e;
+    // DEBUG FIX (P5): only a SPEND-LIMIT rejection is cap-enforcement proof. Any other failure
+    // (RPC down, expired session, UnauthorizedCall) must surface as an error, never enter the
+    // trust ledger as a fake "overcap_revert" row (INVARIANT 6: every number recomputable & true).
+    if (!/spendlimit|spend limit/i.test(msg)) throw e;
     db.prepare("INSERT INTO agent_actions(agent_token,kind,detail,reasoning) VALUES(?,?,?,?)")
       .run(row.agent_token, "overcap_revert", JSON.stringify({ attempted: overCap.toString(), cap: row.cap_wei }),
         `Over-cap attempt reverted onchain as designed: ${msg.slice(0, 160)}`);

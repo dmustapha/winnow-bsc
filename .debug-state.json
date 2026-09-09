@@ -1,0 +1,243 @@
+{
+ "skill": "hackathon-debug",
+ "debugMode": "full",
+ "autonomous_mode": true,
+ "status": "complete",
+ "startedAt": "2026-09-09T04:48:14Z",
+ "lastUpdated": "2026-09-09T06:40:00Z",
+ "currentPhase": 6,
+ "projectComponents": {
+  "contracts": false,
+  "frontend": true,
+  "api": true,
+  "subgraph": false,
+  "aiAgent": true,
+  "worker": true
+ },
+ "phases": {
+  "1": {
+   "status": "complete",
+   "baselineSnapshot": {
+    "typecheck": "PASS",
+    "unitFiles": 4,
+    "apiChecks": 9,
+    "verifyClaims": {
+     "orphanGrades": 0,
+     "negativeAttestations": 0
+    },
+    "build": "PASS",
+    "devServer": "200",
+    "stats": {
+     "indexed": 19307,
+     "probed": 783,
+     "attestations": 2
+    }
+   },
+   "testBugFixed": "api-routes INVARIANT-3 page-0 stale assumption -> DB-driven ungraded pick"
+  },
+  "2": {
+   "status": "complete",
+   "risksTriaged": 7,
+   "cleared": 3,
+   "hardened": 2,
+   "dismissed": 1,
+   "accepted": 1,
+   "dispositions": {
+    "DEV-006 paced retry": "RISK-CLEARED (fix + 4-check test)",
+    "DEV-503 grid risk line": "RISK-CLEARED (fix + live CLI tick verified)",
+    "C3 worker pidfile collision": "RISK-HARDENED (single-instance lock + 2-scenario kill -9 test)",
+    "farm-pattern accusatory wording": "RISK-HARDENED (descriptive wording + 2 honest re-probes, 0 remaining)",
+    "DEV-302/502 LLM key on Fly": "RISK-ACCEPTED (EXTERNAL, D-3; CLI path proven locally; handed to wire DH-1)",
+    "DEV-501 timing framing": "RISK-DISMISSED (deliberate candor in report, no code defect)",
+    "worker cursor/dup rows": "RISK-DISMISSED (kv cursor + ON CONFLICT upsert idempotent by construction)"
+   },
+   "testMatrix": {
+    "unit": "PASS",
+    "api": "PASS 9/9",
+    "activate capBnb 9": "400",
+    "reprobe 429": "PASS",
+    "probe timeout": "F/ok:false/timeout 6001ms",
+    "overcap session5": "reverted:true ExceededSpendLimit",
+    "AC-1": "8 pages 200, 0 error markers",
+    "AC-2": "2.3s <= 15s"
+   }
+  },
+  "3": {
+   "status": "complete",
+   "handoffEntries": 8,
+   "smoke": "PASS /api/stats 200"
+  },
+  "4": {
+   "status": "complete",
+   "critical": 0,
+   "high": 0,
+   "medium": 1,
+   "mediumFixed": 1,
+   "results": "debug-results/phase-4-security-results.md"
+  },
+  "5": {
+   "status": "complete",
+   "mustFix": 5,
+   "shouldFix": 12,
+   "note": 15,
+   "results": [
+    "debug-results/phase-5-backend-critique.md",
+    "debug-results/phase-5-frontend-critique.md"
+   ]
+  },
+  "6": {
+   "status": "complete",
+   "fixed": 10,
+   "delegated": 1,
+   "skippedSanctioned": "remaining SHOULD-FIX + NOTEs",
+   "finalSnapshot": {
+    "typecheck": "PASS",
+    "build": "PASS",
+    "tests": "6 files / 28 checks PASS",
+    "verifyClaims": {
+     "indexed": 28007,
+     "probed": 1333,
+     "orphanGrades": 0,
+     "negativeAttestations": 0
+    }
+   }
+  }
+ },
+ "delegationHandoff": [
+  {
+   "owner": "wire",
+   "risk": "DEV-302/502 LLM degraded on Fly",
+   "reason": "prove provider on deploy host or honest skip-and-log banner"
+  },
+  {
+   "owner": "wire",
+   "risk": "reference agent a2a endpoints localhost-bound",
+   "reason": "rewrite to Fly URL + regrade-refs, prove public reachability"
+  },
+  {
+   "owner": "verify_milestone",
+   "risk": "testnet-first vs LIVE on BSC drift",
+   "reason": "recheck chain labels after DT-2"
+  },
+  {
+   "owner": "stress_test",
+   "risk": "test:source ratio 0.13",
+   "reason": "edge/boundary coverage for grade/probe/api"
+  },
+  {
+   "owner": "stress_test",
+   "risk": "AI-agent edge classes (loop/hallucination/cost/injection/concurrency/overflow/config-isolation)",
+   "reason": "AgentAuditor variant, aiAgent=true"
+  },
+  {
+   "owner": "wire",
+   "risk": "paced retry proven via stubbed fetch only",
+   "reason": "observe real 8004scan under live budget"
+  },
+  {
+   "owner": "stress_test",
+   "risk": "duplicate-name agent floods",
+   "reason": "search/ranking under name spam"
+  },
+  {
+   "owner": "verify_milestone",
+   "risk": "withEndpoints=5 counter honesty",
+   "reason": "copy vs MUST-NOT-CLAIM at demo time"
+  }
+ ],
+ "unresolvedBugs": [],
+ "infraBlocks": [],
+ "detectiveDispatches": 0,
+ "confidenceScore": 90,
+ "testFilesWritten": [
+  "winnow-app/tests/unit/debug-p2-risk-paced-retry.test.ts",
+  "winnow-app/tests/unit/debug-p2-risk-worker-lock.test.ts"
+ ],
+ "lensContracts": [
+  {
+   "name": "reprobe derives grade from real probe (+1 probe_logs row)",
+   "status": "SAME",
+   "expectedChange": false
+  },
+  {
+   "name": "reprobe 20s cooldown 429",
+   "status": "SAME",
+   "expectedChange": false
+  },
+  {
+   "name": "grade formula outputs (10 asserts)",
+   "status": "SAME",
+   "expectedChange": false
+  },
+  {
+   "name": "ungraded agents listed (INVARIANT 3)",
+   "status": "SAME",
+   "expectedChange": false
+  },
+  {
+   "name": "overcap revert on live session (ExceededSpendLimit)",
+   "status": "SAME",
+   "expectedChange": false
+  },
+  {
+   "name": "landing headline copy",
+   "status": "CHANGED",
+   "expectedChange": true
+  },
+  {
+   "name": "activate response JSON labels",
+   "status": "CHANGED",
+   "expectedChange": true
+  },
+  {
+   "name": "activate onchain grant flow post-edit",
+   "status": "MISSING",
+   "expectedChange": false,
+   "note": "not re-executed to avoid unneeded gas/session; route logic unchanged, typecheck+page 200 only"
+  },
+  {
+   "name": "reference agents graded C via real A2A cards",
+   "status": "SAME",
+   "expectedChange": false
+  }
+ ],
+ "testSourceRatio": {
+  "ratio": 0.13,
+  "sourceCount": 39,
+  "testCount": 5,
+  "status": "FAIL-noted",
+  "note": "aggregate assert-style test files; coverage expansion delegated to stress"
+ },
+ "phase_ledger": [
+  {
+   "phase": "baseline",
+   "status": "complete",
+   "evidence": "typecheck+build+6 suites green; TEST-BUG fixed in api-routes (INVARIANT 3 data-robust); DEBUG-REPORT.md Baseline"
+  },
+  {
+   "phase": "known_risks",
+   "status": "complete",
+   "evidence": "7 risks dispositioned (2 CLEARED, 2 HARDENED, 2 DISMISSED, 1 ACCEPTED); TEST MATRIX 10 rows green; DEBUG-REPORT.md Phase 2"
+  },
+  {
+   "phase": "delegation_manifest",
+   "status": "complete",
+   "evidence": "8 DH rows in PULSE Downstream Items + state mirror; smoke /api/stats 200"
+  },
+  {
+   "phase": "security_audit",
+   "status": "complete",
+   "evidence": "debug-results/phase-4-security-results.md; 0 CRIT/HIGH; 1 MED fixed (revoke rate limit)"
+  },
+  {
+   "phase": "senior_dev_critique",
+   "status": "complete",
+   "evidence": "phase-5-backend/frontend-critique.md; 5 MUST-FIX collected"
+  },
+  {
+   "phase": "fix_round",
+   "status": "complete",
+   "evidence": "10 fixes applied+verified, M2 delegated DH-2; full suite re-run green; DEBUG-REPORT.md Fix Round"
+  }
+ ]
+}

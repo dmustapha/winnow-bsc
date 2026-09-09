@@ -29,3 +29,7 @@ Inputs: winnow/{PRD,ARCHITECTURE,PLAN,INVARIANTS}.md, warroom/WINNER-BRIEF.md, r
 2026-09-09T04:45:42Z | hackathon-build | COMPLETE | docker-check | all C0-C5 + docker green
 2026-09-09T04:46:37Z | build | COMPLETE | build | gate=pass verdict=pass_with_blockers (no VERIFIED facts in PULSE section; ship-check: git: 3 uncommitted change(s) beyond pipeline state files;hygiene: 8 pipeline-state/.env file(s) TRACKED in the repo)
 2026-09-09T04:46:53Z | build | COMPLETE | build | gate=pass verdict=pass_with_blockers (no VERIFIED facts in PULSE section; ship-check: git: 4 uncommitted change(s) beyond pipeline state files;hygiene: 8 pipeline-state/.env file(s) TRACKED in the repo)
+2026-09-09T04:47:05Z | build | COMPLETE | build | gate=pass verdict=pass_with_blockers (no VERIFIED facts in PULSE section; ship-check: git: 1 commit(s) not pushed to origin/main (tags are not pushes);hygiene: 8 pipeline-state/.env file(s) TRACKED in the repo)
+2026-09-09T04:47:24Z | debug | START | debug | Dispatching debug
+2026-09-09T04:48:35Z | hackathon-debug | START | phase-1 | full mode, ~7.2h to deadline
+2026-09-09T05:08:22Z | hackathon-debug | COMPLETE | fix_round | confidence 90, 0 unresolved, 10 fixes, 8 DH handoffs, PROCEED

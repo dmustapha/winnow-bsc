@@ -32,7 +32,7 @@ export default async function Home() {
     <main className="max-w-5xl mx-auto px-6 py-12">
       {/* [CRITIQUE E-1] present-progressive + live probed counter = honest (MUST-NOT-CLAIM: never imply full corpus graded) */}
       <h1 className="text-4xl font-bold text-balance leading-tight">
-        {Number(s.indexed).toLocaleString()} agents. Most are shells.
+        {Number(s.indexed).toLocaleString()} agents. Most never answer a probe.
         <br />
         We&apos;re grading every one. {Number(s.probed).toLocaleString()} so far.
       </h1>

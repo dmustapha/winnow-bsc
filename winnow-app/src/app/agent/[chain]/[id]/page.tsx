@@ -80,8 +80,8 @@ export default function AgentPage({ params }: { params: { chain: string; id: str
     <main className="max-w-4xl mx-auto px-6 py-8">
       <div className="flex items-start gap-4">
         <div className="flex-1 min-w-0">
-          <h1 className="text-2xl font-bold">{agent.name || `Agent #${agent.token_id}`}</h1>
-          <p className="text-zinc-400 mt-1">{agent.description || "No description published onchain."}</p>
+          <h1 className="text-2xl font-bold break-words">{agent.name || `Agent #${agent.token_id}`}</h1>
+          <p className="text-zinc-400 mt-1 break-words">{agent.description || "No description published onchain."}</p>
           <p className="text-xs text-zinc-600 mt-1 font-[family-name:var(--font-geist-mono)]">
             ERC-8004 #{agent.token_id} · {chainLabel(agent.chain_id)} (chain {agent.chain_id}) · owner {agent.owner ? `${agent.owner.slice(0, 10)}…` : "unknown"}
           </p>
@@ -135,7 +135,7 @@ export default function AgentPage({ params }: { params: { chain: string; id: str
               <div key={s.id} className="card p-4 flex flex-wrap items-center gap-3">
                 <div className="flex-1 min-w-0 text-sm">
                   <span className="font-[family-name:var(--font-geist-mono)] text-zinc-300">session #{s.id}</span>
-                  <span className="text-zinc-500"> · cap {s.cap_wei} wei · expires {new Date(s.expiry * 1000).toLocaleString()}</span>
+                  <span className="text-zinc-500"> · cap {(Number(s.cap_wei) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 6 })} BNB · expires {new Date(s.expiry * 1000).toLocaleString()}</span>
                   {s.grant_tx && s.grant_tx.startsWith("0x") && (
                     <>
                       {" · "}

@@ -48,8 +48,9 @@ export function startWorker() {
   }
   loop("indexer", 2500, async () => { if (!kvGet("scan_done")) await indexTick(); else await new Promise((r) => setTimeout(r, 60000)); });
   loop("prober", 20000, async () => {
+    // DEBUG FIX (P5 M3): include a2a-only agents — they fell between prober (mcp only) and fastgrader (no endpoints)
     const next = db.prepare(`SELECT a.chain_id, a.token_id FROM agents a LEFT JOIN grades g ON g.chain_id=a.chain_id AND g.token_id=a.token_id
-      WHERE a.mcp_server IS NOT NULL AND g.token_id IS NULL LIMIT 1`).get() as any;
+      WHERE (a.mcp_server IS NOT NULL OR a.a2a_endpoint IS NOT NULL) AND g.token_id IS NULL LIMIT 1`).get() as any;
     if (next) await gradeAgent(next.chain_id, next.token_id);
   });
   // [CRITIQUE E-2] fast-grade lane: endpoint-less agents (the 96%) cost ZERO network to grade
