@@ -363,11 +363,11 @@
 - [AUTO] Report kept at canonical name STRESS-TEST-REPORT.md (dispatch said "STRESS-REPORT.md").
 
 #### Verified Facts
-- [2026-09-09T07:59Z] All 4 POST routes reject every malformed-body class with 400, never 500 | evidence: /tmp battery output, 43/43 ok
-- [2026-09-09T08:02Z] Worker pidfile lock: refuses 2nd instance while holder alive; takes over stale pid after kill -9 | evidence: pidfile 48350->51179, /tmp/st-worker3.log
-- [2026-09-09T08:01Z] Dead-endpoint agent grades F/17 with liveness 0 (honest grading headline holds under falsification) | evidence: falsify test PASS
-- [2026-09-09T08:05Z] Unit suite breaks when grading core is no-oped (ablation exit 1) and passes after revert | evidence: /tmp/st-ablation.log
-
+- 65/65 stress checks pass, 0 unresolved. State: VERIFIED (STRESS-TEST-REPORT.md)
+- Adversarial battery 43 cases, zero 500s. State: VERIFIED (STRESS-TEST-REPORT.md §adversarial)
+- Worker kill -9 recovery, no dup rows. State: VERIFIED (report §worker)
+- Session 5 overcap → onchain ExceededSpendLimit revert; still live/valid. State: VERIFIED (report §session)
+- Ablation: no-oped grading core broke suite exit 1, reverted green. State: VERIFIED (/tmp/st-ablation.log)
 #### Assumptions
 - [ASSUMED] Embedded-worker grading cadence in production mirrors dev behavior (instrumentation.ts fires in `next start` too) — deploy should confirm one grading tick post-deploy.
 
