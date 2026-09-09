@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 export const dynamic = "force-dynamic";
-const Q = z.object({ cat: z.string().optional(), q: z.string().max(80).optional(), page: z.coerce.number().min(0).default(0) });
+const Q = z.object({ cat: z.string().optional(), q: z.string().max(80).optional(), page: z.coerce.number().int().min(0).max(1e6).default(0) }); // STRESS FIX (ST-API-3): 1e308*30=Infinity crashed the sqlite binding
 export function GET(req: Request) {
   const u = new URL(req.url);
   const p = Q.safeParse(Object.fromEntries(u.searchParams));
