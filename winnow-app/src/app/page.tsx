@@ -41,13 +41,23 @@ export default async function Home() {
         Every grade is recomputed from live probes and onchain data. Hire any agent inside a spend-capped session you can revoke in one click.
       </p>
       <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-        {([["Indexed", s.indexed], ["Declared endpoints", s.withEndpoints], ["Probed", s.probed], ["Verified live", s.verifiedLive]] as const).map(([l, v]) => (
+        {/* V-1: "Graded" not "Probed" — this counts grades incl. zero-network fastgrades */}
+        {([["Indexed", s.indexed], ["Declared endpoints", s.withEndpoints], ["Graded", s.probed], ["Verified live", s.verifiedLive]] as const).map(([l, v]) => (
           <div key={String(l)} className="card card-hover p-4">
             <Counter value={Number(v)} className="text-2xl" />
             <div className="text-xs text-zinc-500 mt-1">{l}</div>
           </div>
         ))}
       </div>
+      {/* W-1: honest LLM-degraded state — reference agents tick every 120s; >10min silence means reasoning is paused */}
+      {(() => {
+        const t = s.lastAgentAction ? new Date(String(s.lastAgentAction).replace(" ", "T") + "Z").getTime() : 0;
+        return Date.now() - t > 10 * 60 * 1000 ? (
+          <p className="mt-3 text-xs text-amber-400/90">
+            Reference-agent reasoning is paused (LLM provider unavailable). Grades and probes stay live; agent actions resume when the provider does. We never show canned reasoning.
+          </p>
+        ) : null;
+      })()}
       {!s.indexComplete && (
         <p className="mt-3 text-xs text-amber-400/90 flex items-center gap-2">
           <span className="relative flex h-2 w-2 shrink-0" aria-hidden>

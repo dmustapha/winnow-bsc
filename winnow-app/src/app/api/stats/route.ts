@@ -10,6 +10,8 @@ export function GET() {
     verifiedLive: (db.prepare("SELECT COUNT(*) c FROM probe_logs WHERE liveness>0").get() as any).c,
     attestations: (db.prepare("SELECT COUNT(*) c FROM attestations").get() as any).c,
     indexComplete: !!(db.prepare("SELECT v FROM kv WHERE k='scan_done'").get() as any),
+    // W-1: honest LLM-degraded signal — last reference-agent action timestamp (null = none yet)
+    lastAgentAction: (db.prepare("SELECT MAX(at) t FROM agent_actions").get() as any).t ?? null,
     // real graded-agent counts per category (DB-derived, honest)
     gradedByCat: Object.fromEntries(
       (db.prepare("SELECT a.category cat, COUNT(*) c FROM agents a JOIN grades g ON g.chain_id=a.chain_id AND g.token_id=a.token_id WHERE a.category IS NOT NULL GROUP BY a.category").all() as any[]).map((r) => [r.cat, r.c])

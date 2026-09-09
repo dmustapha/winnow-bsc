@@ -9,11 +9,12 @@ COPY . .
 RUN npm run build
 FROM node:22-slim
 WORKDIR /app
-ENV NODE_ENV=production PORT=3000 DB_PATH=/data/winnow.db
+ENV NODE_ENV=production PORT=3000 DB_PATH=/app/data/winnow.db
 COPY --from=build /app/.next/standalone ./
 COPY --from=build /app/.next/static ./.next/static
 COPY --from=build /app/node_modules/better-sqlite3 ./node_modules/better-sqlite3
 COPY --from=build /app/scripts ./scripts
 COPY --from=build /app/node_modules/tsx ./node_modules/tsx
+COPY --from=build /app/seed ./seed
 EXPOSE 3000
-CMD ["node", "server.js"]
+CMD ["sh", "-c", "mkdir -p /app/data && [ -f /app/data/winnow.db ] || cp /app/seed/winnow-seed.db /app/data/winnow.db; node server.js"]
