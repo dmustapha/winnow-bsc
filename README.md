@@ -125,12 +125,13 @@ Each row is recomputable against the committed seed DB (`winnow-app/seed/winnow-
 ## Run it locally
 
 ```bash
-cd winnow-app
+git clone https://github.com/dmustapha/winnow-bsc
+cd winnow-bsc/winnow-app
 npm install
 DB_PATH=./seed/winnow-seed.db npm run dev
 ```
 
-Open http://localhost:3000. Recompute the headline numbers: `DB_PATH=./seed/winnow-seed.db npx tsx scripts/verify-claims.ts`.
+Open http://localhost:3000. The 18MB seed DB is committed, so the full graded index loads with no API keys. Recompute the headline numbers yourself: `DB_PATH=./seed/winnow-seed.db npm run verify`.
 
 Full technical detail, the grade formula, and the per-integration code walkthrough live in [`winnow-app/README.md`](winnow-app/README.md).
 
