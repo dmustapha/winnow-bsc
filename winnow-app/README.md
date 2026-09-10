@@ -1,4 +1,4 @@
-<p align="center"><img src="public/logo.svg" width="72" alt="Winnow logo: a sieve grid with one solid node among hollow shells"/></p>
+<p align="center"><img src="public/logo.svg" width="72" alt="Winnow logo: hollow candidate agents sifted down to one verified emerald grain"/></p>
 
 # Winnow: the trust-graded agent marketplace for BSC
 

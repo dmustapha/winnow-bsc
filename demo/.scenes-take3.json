@@ -1,0 +1,41 @@
+{
+  "scenes": [
+    {
+      "name": "scene4-session-row",
+      "file": "/Users/MAC/bnb-smart-money/demo/raw/scene4-session-row.webm",
+      "wallclock_s": 20.3,
+      "error": null
+    },
+    {
+      "name": "scene5-spend",
+      "file": "/Users/MAC/bnb-smart-money/demo/raw/scene5-spend.webm",
+      "wallclock_s": 25.6,
+      "error": null
+    },
+    {
+      "name": "scene6-leash",
+      "file": "/Users/MAC/bnb-smart-money/demo/raw/scene6-leash.webm",
+      "wallclock_s": 42,
+      "error": null
+    },
+    {
+      "name": "scene7-revoke",
+      "file": "/Users/MAC/bnb-smart-money/demo/raw/scene7-revoke.webm",
+      "wallclock_s": 21.4,
+      "error": "TimeoutError: locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.card').filter({ hasText: /session #9\\b/ }).first() to be visible\u001b[22m\n"
+    }
+  ],
+  "fallbacks": [
+    "scene5: BscScan challenge page, used /proof fallback",
+    "scene6: overcap failed or timed out, narrated historical revert"
+  ],
+  "mySessionId": 9,
+  "startedAt": "2026-09-09T19:53:31.035Z",
+  "note": "session #9 granted via rehearsed curl (the budgeted activate); scene 4 uses the script fallback beat on the fresh row",
+  "spendTx": "https://testnet.bscscan.com/tx/0xfabc2048824e26c34d2586084326cb731e4c43c6f6738be681be2ea5dd336f52",
+  "safety": {
+    "s5_status": "live",
+    "s6_status": "live"
+  },
+  "finishedAt": "2026-09-09T19:56:54.643Z"
+}

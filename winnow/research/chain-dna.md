@@ -1,7 +1,0 @@
-# Chain DNA: BNB Smart Chain (agent-economy context, Sep 2026)
-**Unique capabilities:** Largest ERC-8004 agent registry anywhere (310K+ agents, ~38-60% of all networks) with an open indexer API (8004scan); Altana onchain-enforced session keys (allowlist+spend cap+expiry in a public Keystore, 1-tx revocation) — production, CertiK-audited; ERC-8183 escrowed agent hiring with $U gasless (EIP-3009); Binance x402/B402 production payment facilitator (CoinMarketCap uses it); PancakeSwap publishes an official "build trading agents on v3" guide with exact contracts; cheap fast blocks (~1.5s) make live onchain reads/writes demo-friendly.
-**Founding thesis:** High-throughput low-fee EVM for retail-scale onchain activity — now repositioned as THE agent chain ("Smart Money Era").
-**Community builds:** trading bots, meme/Four.meme tooling, DeFi (PCS/Venus/Lista), and since Mar 2026 a flood of ERC-8004 agent registrations (72.8K/30d) — mostly empty shells.
-**Path of least resistance:** reading/writing ERC-8004 + 8004scan API; PCS v3 position mgmt via official SDKs; Altana sessions via a 15-30min quickstart.
-**Honest constraints:** registry data is ~96% shells/spam; feedback is Sybil-saturated (59.2%); ValidationRegistry unused/undeployed; x402 blocked in-browser (CORS); $U tokenomics opaque.
-**Top community frustrations:** (1) can't tell live agents from dead/burned ones — burned agents outrank live ones in search; (2) zero trustworthy reputation — "66 agents probed, none carried on-chain reputation"; (3) hiring = digging through X threads and GitHub repos.

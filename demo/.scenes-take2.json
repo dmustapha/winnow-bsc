@@ -1,0 +1,41 @@
+{
+  "scenes": [
+    {
+      "name": "scene4-activate",
+      "file": "/Users/MAC/bnb-smart-money/demo/raw/scene4-activate.webm",
+      "wallclock_s": 26.3,
+      "error": "Error: activate error: "
+    },
+    {
+      "name": "scene4-activate-retry",
+      "file": "/Users/MAC/bnb-smart-money/demo/raw/scene4-activate-retry.webm",
+      "wallclock_s": 27.4,
+      "error": "Error: activate error: "
+    },
+    {
+      "name": "scene4-fallback-standing",
+      "file": "/Users/MAC/bnb-smart-money/demo/raw/scene4-fallback-standing.webm",
+      "wallclock_s": 10.9,
+      "error": null
+    },
+    {
+      "name": "scene5to7-proof-fallback",
+      "file": "/Users/MAC/bnb-smart-money/demo/raw/scene5to7-proof-fallback.webm",
+      "wallclock_s": 15.8,
+      "error": null
+    }
+  ],
+  "fallbacks": [
+    "scene4: first activate attempt failed, retried after 70s",
+    "scene4: activate unavailable, showed standing live session (no exercise)",
+    "scenes 5-7: no own session, /proof receipts carry the lifecycle"
+  ],
+  "mySessionId": null,
+  "startedAt": "2026-09-09T19:49:16.572Z",
+  "rerun": "scenes 4-7 after Render restart",
+  "safety": {
+    "s5_status": "live",
+    "s6_status": "live"
+  },
+  "finishedAt": "2026-09-09T19:51:52.769Z"
+}
